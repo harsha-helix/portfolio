@@ -5,6 +5,26 @@
 html, body {
   margin: 0;
   padding: 0;
+  /* Apply the modern sans-serif font globally */
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Apply the custom monospace font anywhere you used the monospace tag */
+.hh-desktop a, 
+.hh-mobile a,
+button,
+h2,
+span[style*="monospace"],
+div[style*="monospace"],
+p[style*="monospace"] {
+  font-family: inherit; 
+}
+
+/* A helper class just in case you need to force monospace */
+.mono {
+  font-family: 'Fira Code', monospace !important;
 }
 
 #root {
