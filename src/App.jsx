@@ -200,7 +200,7 @@ export default function App() {
       fontFamily: MONO, color: t.textFaint, border: `1px solid ${t.border}`,
       borderRadius: 6, padding: '3px 9px', textDecoration: 'none', background: t.bgTag,
     }}>
-      <ExtLink size={10}/> {label}
+      <ExternalLink size={10}/> {label}
     </a>
   );
  
@@ -433,7 +433,7 @@ export default function App() {
               { icon: <FlaskIc size={19} style={{ color: t.accent1 }}/>, title: 'Photonic Analog Computing', body: 'Building Spatial Photonic Ising Machines using SLMs and Fourier optics. Interested in how analog interference solves combinatorial optimisation at low energy cost and high speed.' },
               { icon: <Atom size={19} style={{ color: t.accent2 }}/>, title: 'Quantum Walks & Algorithms', body: 'Exploring discrete-time quantum walks as primitives for reinforcement learning and optimisation, with a focus on DTQW-based advantage on bandit problems and graph algorithms.' },
               { icon: <CpuIc size={19} style={{ color: t.accent1 }}/>, title: 'Continuous-Variable Quantum Optics', body: 'Characterising entanglement in squeezed and cluster states. Interested in the role of non-Gaussian operations like photon subtraction in enabling universal CV computation.' },
-              { icon: <PackageIc size={19} style={{ color: t.accent2 }}/>, title: 'Open Quantum Software', body: 'Designing accessible software that runs on real NISQ hardware. Open-source is the fastest path to meaningful quantum advantage for the broader scientific community.' },
+              { icon: <Package size={19} style={{ color: t.accent2 }}/>, title: 'Open Quantum Software', body: 'Designing accessible software that runs on real NISQ hardware. Open-source is the fastest path to meaningful quantum advantage for the broader scientific community.' },
             ].map(({ icon, title, body }) => (
               <div key={title} style={{ ...card, padding: 22 }}>
                 <div style={{ marginBottom: 14 }}>{icon}</div>
@@ -450,7 +450,7 @@ export default function App() {
       ════════════════════════════════════════════════════════════════════ */}
       <section id="experience" style={{ padding: '88px 28px', background: t.bgSectionB, borderTop: `1px solid ${t.borderFaint}` }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <SectionHeading icon={<BriefcaseIc size={20}/>} label="Experience"/>
+          <SectionHeading icon={<Briefcase size={20}/>} label="Experience"/>
  
           <div style={{ position: 'relative' }}>
             <div className="hh-tl-line" style={{ position: 'absolute', left: '26%', top: 0, bottom: 0, width: 1, background: t.border, display: 'none' }}/>
@@ -469,7 +469,7 @@ export default function App() {
                 dot: t.accent2, sup: 'Open-source quantum startup',
                 bullets: [
                   <>Co-founded an open-source quantum algorithms startup; secured <span style={{ color: t.text, fontWeight: 500 }}>INR 5,00,000</span> seed funding (PIEDS) and the <span style={{ color: t.text, fontWeight: 500 }}>INR 40,000</span> Prof. Suresh Ramaswamy Award.</>,
-                  <>Released <a href={LINKS.qtsit} target="_blank" rel="noopener noreferrer" style={{ color: t.accent2, fontFamily: MONO, fontSize: 14 }}>qtsit</a> on PyPI — coined and split-step DTQW implementations applied to the N-Armed Bandit problem, achieving measurable advantage over classical baselines. <a href={LINKS.qtsitRepo} target="_blank" rel="noopener noreferrer" style={{ color: t.textFaint, display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 12, fontFamily: MONO }}><ExtLink size={10}/> repo</a></>,
+                  <>Released <a href={LINKS.qtsit} target="_blank" rel="noopener noreferrer" style={{ color: t.accent2, fontFamily: MONO, fontSize: 14 }}>qtsit</a> on PyPI — coined and split-step DTQW implementations applied to the N-Armed Bandit problem, achieving measurable advantage over classical baselines. <a href={LINKS.qtsitRepo} target="_blank" rel="noopener noreferrer" style={{ color: t.textFaint, display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 12, fontFamily: MONO }}><ExternalLink size={10}/> repo</a></>,
                 ],
               },
               {
