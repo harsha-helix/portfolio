@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
-import heroPhoto from "./assets/pict.jpg";
+import heroPhoto from "./assets/pict.webp";
 
 /* ═══════════════════════════════════════════════
    DATA
@@ -807,8 +807,10 @@ function CVButton() {
 ═══════════════════════════════════════════════ */
 function HeroPicture() {
   const { isDark, T } = useContext(ThemeContext);
+  const isMobile = useMediaQuery("(max-width: 850px)");
+  const size = isMobile ? 144 : 180;
   return (
-    <div style={{ position: "relative", width: 180, height: 180, flexShrink: 0 }}>
+    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
       {/* animated ring */}
       <svg style={{
         position: "absolute", inset: -8, width: "calc(100%+16px)", height: "calc(100%+16px)",
@@ -821,7 +823,7 @@ function HeroPicture() {
       </svg>
       {/* photo placeholder — replace src with actual photo */}
       <div style={{
-        width: 180, height: 180, borderRadius: "50%",
+        width: size, height: size, borderRadius: "50%",
         border: `1.5px solid ${T.borderMed}`, overflow: "hidden",
         background: `linear-gradient(135deg, ${T.surface} 0%, #1a2038 100%)`,
         display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column",
@@ -852,6 +854,8 @@ function HeroPicture() {
 
 function InteractiveBackgroundGraphs() {
   const { isDark, T } = useContext(ThemeContext);
+  const isMobile = useMediaQuery("(max-width: 850px)");
+  if (isMobile) return null; // Save CPU on mobile!
   const canvasRef = useRef(null);
 
   // Track mouse and nodes over time
@@ -1477,73 +1481,7 @@ function ExploringSection() {
   );
 }
 
-/* ═══════════════════════════════════════════════
-   FRAGMENTS SECTION (replaces observations, dark)
-═══════════════════════════════════════════════ */
-function FragmentsSection() {
-  const { isDark, T } = useContext(ThemeContext);
-  const kindColorsDark = {
-    note: { bg: "rgba(100,140,200,0.08)", border: "rgba(100,140,200,0.2)", accent: "#6898d0" },
-    ref: { bg: "rgba(108,92,231,0.08)", border: "rgba(108,92,231,0.2)", accent: "#8878c0" },
-    measure: { bg: "rgba(32,192,168,0.08)", border: "rgba(32,192,168,0.2)", accent: "#20c0a8" },
-    sketch: { bg: "rgba(212,136,10,0.08)", border: "rgba(212,136,10,0.2)", accent: "#d4880a" },
-  };
-  const kindColorsLight = {
-    note: { bg: "rgba(100,140,200,0.08)", border: "rgba(100,140,200,0.2)", accent: "#6898d0" },
-    ref: { bg: "rgba(92,66,189,0.08)", border: "rgba(92,66,189,0.25)", accent: "#5c42bd" },
-    measure: { bg: "rgba(23,160,140,0.08)", border: "rgba(23,160,140,0.25)", accent: "#17a08c" },
-    sketch: { bg: "rgba(196,109,3,0.08)", border: "rgba(196,109,3,0.25)", accent: "#c46d03" },
-  };
-  const kindColors = isDark ? kindColorsDark : kindColorsLight;
-  return (
-    <section id="fragments" style={{ padding: "80px 0", background: T.bg3 }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px" }}>
-        <div style={{ marginBottom: 44 }}>
-          <SectionLabel n="05" label="Fragments" />
-          <SectionHeading>Field Notes</SectionHeading>
-          <p style={{ fontSize: 13.5, color: T.textDim, fontFamily: MONO, margin: "8px 0 0" }}>
-            scraps, references, measurements. the margins of actual work.
-          </p>
-        </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-          {FRAGMENTS.map((f, i) => {
-            const kc = kindColors[f.kind] || kindColors.note;
-            return (
-              <div key={i} style={{
-                background: kc.bg, border: `0.5px solid ${kc.border}`,
-                borderRadius: 8, padding: "16px 20px",
-                display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 14, alignItems: "center"
-              }}>
-                <div style={{
-                  width: 2.5, height: 34, borderRadius: 2, background: kc.accent,
-                  opacity: 0.8, flexShrink: 0
-                }} />
-                <div>
-                  <div style={{
-                    fontFamily: MONO, fontSize: 9, color: kc.accent, letterSpacing: "0.1em",
-                    textTransform: "uppercase", marginBottom: 5, opacity: 0.9
-                  }}>
-                    {f.kind}
-                  </div>
-                  <div style={{ fontSize: 12.5, color: T.textMid, lineHeight: 1.5, fontFamily: SERIF }}>
-                    {f.content}
-                  </div>
-                </div>
-                <span style={{
-                  fontFamily: MONO, fontSize: 9, color: T.textDim,
-                  whiteSpace: "nowrap", opacity: 0.7
-                }}>
-                  {f.coord}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ═══════════════════════════════════════════════
    ABOUT SECTION (DARK)
@@ -1703,7 +1641,7 @@ function Portfolio() {
 
   return (
     <div style={{ background: T.bg, minHeight: "100vh", fontFamily: SERIF, color: T.text }}>
-      <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
 
       {/* NAV */}
       <nav style={{
@@ -1833,9 +1771,11 @@ function Portfolio() {
           </div>
 
           {/* terminal */}
-          <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-            <MiniTerminal />
-          </div>
+          {!isMobile && (
+            <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+              <MiniTerminal />
+            </div>
+          )}
         </div>
 
         <div style={{
@@ -1865,8 +1805,7 @@ function Portfolio() {
       {/* EXPLORING */}
       <ExploringSection />
 
-      {/* FRAGMENTS */}
-      <FragmentsSection />
+
 
       {/* FOOTER */}
       <footer style={{
