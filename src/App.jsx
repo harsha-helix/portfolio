@@ -699,7 +699,9 @@ function MiniTerminal() {
   };
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (lines.length > 6) {
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   }, [lines]);
 
   useEffect(() => {
@@ -987,8 +989,23 @@ function InteractiveBackgroundGraphs() {
   );
 }
 
+
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(
+    typeof window !== "undefined" ? window.matchMedia(query).matches : false
+  );
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const listener = () => setMatches(media.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
+  return matches;
+}
+
 /* ═══════════════════════════════════════════════
    SCROLL-DRIVEN PROJECT SECTION
+
 ═══════════════════════════════════════════════ */
 function ProjectsSection() {
   const { isDark, T } = useContext(ThemeContext);
@@ -1011,6 +1028,7 @@ function ProjectsSection() {
   }, [N]);
 
   const project = PROJECTS[activeIdx];
+  const isMobile = useMediaQuery("(max-width: 850px)");
 
   return (
     <div ref={outerRef} style={{ height: `${N * 100}vh`, position: "relative" }}>
@@ -1026,14 +1044,14 @@ function ProjectsSection() {
         <div style={{
           position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1,
           backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px)",
-          opacity: 0.6
+          opacity: isDark ? 0.6 : 0.4
         }} />
 
-        <div style={{ position: "absolute", top: 64, left: 48, zIndex: 10 }}>
+        <div style={{ position: "absolute", top: isMobile ? 32 : 64, left: isMobile ? 24 : 48, zIndex: 10 }}>
           <SectionLabel n="01" label="Pinned artifacts" />
         </div>
         <div style={{
-          position: "absolute", top: 68, right: 48, zIndex: 10,
+          position: "absolute", top: isMobile ? 32 : 68, right: isMobile ? 24 : 48, zIndex: 10,
           display: "flex", gap: 6, alignItems: "center"
         }}>
           {PROJECTS.map((_, i) => (
@@ -1049,14 +1067,20 @@ function ProjectsSection() {
           </span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", height: "100%" }}>
+        <div style={{
+          display: isMobile ? "flex" : "grid",
+          flexDirection: isMobile ? "column" : "row",
+          gridTemplateColumns: isMobile ? "none" : "1fr 1fr",
+          height: "100%"
+        }}>
           {/* LEFT */}
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center",
-            padding: "96px 36px 60px 48px", position: "relative", zIndex: 5
+            padding: isMobile ? "80px 24px 20px 24px" : "96px 36px 60px 48px", position: "relative", zIndex: 5,
+            height: isMobile ? "46%" : "auto"
           }}>
-            <div style={{ width: "100%", maxWidth: 520 }}>
-              <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 20 }}>
+            <div style={{ width: "100%", maxWidth: 520, height: isMobile ? "100%" : "auto", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: isMobile ? 12 : 20 }}>
                 {project.tags.map((t) => (
                   <span key={t} style={{
                     fontSize: 9.5, fontFamily: MONO, letterSpacing: "0.08em",
@@ -1069,20 +1093,21 @@ function ProjectsSection() {
               </div>
               <h2 key={`t-${activeIdx}`} style={{
                 fontFamily: SERIF,
-                fontSize: "clamp(22px,2.6vw,34px)", fontWeight: 600, color: T.text,
-                margin: "0 0 16px", lineHeight: 1.2, letterSpacing: "-0.01em",
+                fontSize: isMobile ? "clamp(20px, 6vw, 24px)" : "clamp(22px,2.6vw,34px)",
+                fontWeight: 600, color: T.text,
+                margin: isMobile ? "0 0 8px" : "0 0 16px", lineHeight: 1.2, letterSpacing: "-0.01em",
                 animation: "slideUp 0.45s cubic-bezier(0.22,1,0.36,1)"
               }}>
                 {project.title}
               </h2>
               <p key={`d-${activeIdx}`} style={{
-                fontSize: 15, color: T.textMid, lineHeight: 1.78,
-                margin: "0 0 24px", fontFamily: SERIF,
+                fontSize: isMobile ? 13.5 : 15, color: T.textMid, lineHeight: isMobile ? 1.5 : 1.78,
+                margin: isMobile ? "0 0 12px" : "0 0 24px", fontFamily: SERIF,
                 animation: "slideUp 0.55s cubic-bezier(0.22,1,0.36,1)"
               }}>
                 {project.description}
               </p>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 24 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: isMobile ? 16 : 24 }}>
                 {project.tools.map((t) => (
                   <span key={t} style={{
                     fontSize: 9.5, fontFamily: MONO,
@@ -1093,56 +1118,63 @@ function ProjectsSection() {
                   </span>
                 ))}
               </div>
-              <div style={{
-                fontSize: 11, fontFamily: MONO, color: T.textDim,
-                display: "flex", alignItems: "center", gap: 6, paddingTop: 16,
-                borderTop: `0.5px dashed ${T.border}`
-              }}>
-                <span style={{ opacity: 0.5 }}>↳</span>{project.annotation}
-              </div>
-              <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
-                {[["GitHub", "#"], ["Paper", "#"]].map(([l, h]) => (
-                  <a key={l} href={h} style={{
-                    fontFamily: MONO, fontSize: 10.5, color: T.textMid,
-                    border: `0.5px solid ${T.border}`, borderRadius: 4, padding: "7px 18px",
-                    textDecoration: "none", letterSpacing: "0.06em", background: T.surface,
-                    transition: "all 0.2s"
-                  }}>
-                    {l} ↗
-                  </a>
-                ))}
-              </div>
+              <div style={{ display: isMobile ? "none" : "block" }}>
+                <div style={{
+                  fontSize: 11, fontFamily: MONO, color: T.textDim,
+                  display: "flex", alignItems: "center", gap: 6, paddingTop: 16,
+                  borderTop: `0.5px dashed ${T.border}`
+                }}>
+                  <span style={{ opacity: 0.5 }}>↳</span>{project.annotation}
+                </div>
+                <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
+                  {[["GitHub", "#"], ["Paper", "#"]].map(([l, h]) => (
+                    <a key={l} href={h} style={{
+                      fontFamily: MONO, fontSize: 10.5, color: T.textMid,
+                      border: `0.5px solid ${T.border}`, borderRadius: 4, padding: "7px 18px",
+                      textDecoration: "none", letterSpacing: "0.06em", background: T.surface,
+                      transition: "all 0.2s"
+                    }}>
+                      {l} ↗
+                    </a>
+                  ))}
+                </div>
 
-              <div style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 11 }}>
-                {PROJECTS.map((p, i) => (
-                  <div key={p.id} style={{
-                    display: "flex", alignItems: "center", gap: 12,
-                    opacity: i === activeIdx ? 1 : 0.22,
-                    transform: i === activeIdx ? "translateX(8px)" : "translateX(0)",
-                    transition: "all 0.5s cubic-bezier(0.22,1,0.36,1)"
-                  }}>
-                    <div style={{
-                      height: 1, background: T.accent1, flexShrink: 0,
-                      width: i === activeIdx ? 28 : 10,
-                      boxShadow: i === activeIdx ? `0 0 6px ${T.accent1}80` : "none",
+                <div style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 11 }}>
+                  {PROJECTS.map((p, i) => (
+                    <div key={p.id} style={{
+                      display: "flex", alignItems: "center", gap: 12,
+                      opacity: i === activeIdx ? 1 : 0.22,
+                      transform: i === activeIdx ? "translateX(8px)" : "translateX(0)",
                       transition: "all 0.5s cubic-bezier(0.22,1,0.36,1)"
-                    }} />
-                    <span style={{ fontFamily: SERIF, fontSize: 13.5, color: T.text, lineHeight: 1.3 }}>
-                      {p.title}
-                    </span>
-                  </div>
-                ))}
+                    }}>
+                      <div style={{
+                        height: 1, background: T.accent1, flexShrink: 0,
+                        width: i === activeIdx ? 28 : 10,
+                        boxShadow: i === activeIdx ? `0 0 6px ${T.accent1}80` : "none",
+                        transition: "all 0.5s cubic-bezier(0.22,1,0.36,1)"
+                      }} />
+                      <span style={{ fontFamily: SERIF, fontSize: 13.5, color: T.text, lineHeight: 1.3 }}>
+                        {p.title}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           {/* RIGHT — graph */}
-          <div style={{ padding: "96px 40px 60px 20px", display: "flex", alignItems: "center", position: "relative", zIndex: 5 }}>
+          <div style={{
+            padding: isMobile ? "10px 24px 32px 24px" : "96px 40px 60px 20px",
+            display: "flex", alignItems: "center", position: "relative", zIndex: 5,
+            height: isMobile ? "54%" : "auto"
+          }}>
             <div style={{
-              position: "relative", width: "100%", height: "76%", minHeight: 400, zIndex: 1,
+              position: "relative", width: "100%", height: "100%", minHeight: isMobile ? 0 : 400, zIndex: 1,
               background: T.bg2, border: `0.5px solid ${T.border}`, borderRadius: 16, overflow: "hidden",
               boxShadow: isDark ? "0 20px 60px rgba(0,0,0,0.4)" : "0 20px 60px rgba(0,0,0,0.1)"
             }}>
+
               <DotGrid opacity={0.14} />
               <div style={{ position: "absolute", inset: 0 }}>
                 <GraphCanvas activeNodes={project.nodes} fullColor={false} dark={isDark} />
@@ -1183,6 +1215,7 @@ function ProjectsSection() {
 ═══════════════════════════════════════════════ */
 function ConceptField() {
   const { isDark, T } = useContext(ThemeContext);
+  const isMobile = useMediaQuery("(max-width: 850px)");
   const categories = [
     { label: "Quantum", color: T.accent1 },
     { label: "Photonics", color: T.accent3 },
@@ -1191,7 +1224,7 @@ function ConceptField() {
   ];
 
   return (
-    <section id="field" style={{ padding: "100px 0 90px", background: T.bg, position: "relative" }}>
+    <section id="field" style={{ padding: isMobile ? "60px 0 60px" : "100px 0 90px", background: T.bg, position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
         <InteractiveBackgroundGraphs />
       </div>
@@ -1200,8 +1233,8 @@ function ConceptField() {
         backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px)",
         opacity: isDark ? 0.6 : 0.4
       }} />
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 2 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 36 }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "0 24px" : "0 48px", position: "relative", zIndex: 2 }}>
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", alignItems: isMobile ? "flex-start" : "flex-end", marginBottom: 36, gap: isMobile ? 20 : 0 }}>
           <div>
             <SectionLabel n="02" label="Concept field" />
             <SectionHeading>Conceptual Topology</SectionHeading>
@@ -1209,7 +1242,7 @@ function ConceptField() {
               All nodes · scroll projects above to illuminate regions
             </p>
           </div>
-          <div style={{ display: "flex", gap: 18, alignItems: "center", paddingBottom: 4 }}>
+          <div style={{ display: "flex", gap: isMobile ? 12 : 18, alignItems: "center", paddingBottom: 4, flexWrap: "wrap", marginTop: isMobile ? 8 : 0 }}>
             {categories.map((c) => (
               <div key={c.label} style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 <div style={{
@@ -1225,9 +1258,10 @@ function ConceptField() {
         </div>
 
         <div style={{
-          position: "relative", height: 520, background: T.bg2,
+          position: "relative", height: isMobile ? 800 : 520, background: T.bg2,
           border: `0.5px solid ${T.border}`, borderRadius: 14, overflow: "hidden"
         }}>
+
           <DotGrid opacity={0.12} />
 
           {/* region blobs — darker in dark mode */}
@@ -1516,8 +1550,9 @@ function FragmentsSection() {
 ═══════════════════════════════════════════════ */
 function AboutSection() {
   const { isDark, T } = useContext(ThemeContext);
+  const isMobile = useMediaQuery("(max-width: 850px)");
   return (
-    <section id="about" style={{ padding: "80px 0 120px", background: T.bg, position: "relative" }}>
+    <section id="about" style={{ padding: isMobile ? "60px 0 100px" : "80px 0 120px", background: T.bg, position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
         <InteractiveBackgroundGraphs />
       </div>
@@ -1526,8 +1561,9 @@ function AboutSection() {
         backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px)",
         opacity: isDark ? 0.6 : 0.4
       }} />
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 2 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "5fr 4fr", gap: 80, alignItems: "start" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "0 24px" : "0 48px", position: "relative", zIndex: 2 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "5fr 4fr", gap: isMobile ? 60 : 80, alignItems: "start" }}>
+
           <div>
             <SectionLabel n="06" label="About" />
             <h2 style={{
@@ -1655,6 +1691,7 @@ export default function AppWrapper() {
 
 function Portfolio() {
   const { isDark, toggleTheme, T } = useContext(ThemeContext);
+  const isMobile = useMediaQuery("(max-width: 850px)");
 
   const [navVisible, setNavVisible] = useState(false);
 
@@ -1702,17 +1739,19 @@ function Portfolio() {
             )}
           </button>
           {[["work", "#work"], ["field", "#field"], ["experience", "#experience"],
-          ["exploring", "#exploring"], ["about", "#about"]].map(([s, h]) => (
-            <a key={s} href={h} style={{
-              fontFamily: MONO, fontSize: 10.5, color: T.textDim,
-              textDecoration: "none", letterSpacing: "0.08em",
-              transition: "color 0.2s"
-            }}
-              onMouseEnter={e => e.target.style.color = T.text}
-              onMouseLeave={e => e.target.style.color = T.textDim}>
-              {s}
-            </a>
-          ))}
+          ["exploring", "#exploring"], ["about", "#about"]]
+            .filter(([s]) => !(isMobile && s === "field"))
+            .map(([s, h]) => (
+              <a key={s} href={h} style={{
+                fontFamily: MONO, fontSize: 10.5, color: T.textDim,
+                textDecoration: "none", letterSpacing: "0.08em",
+                transition: "color 0.2s"
+              }}
+                onMouseEnter={e => e.target.style.color = T.text}
+                onMouseLeave={e => e.target.style.color = T.textDim}>
+                {s}
+              </a>
+            ))}
         </div>
       </nav>
 
@@ -1742,7 +1781,12 @@ function Portfolio() {
           display: "flex", flexDirection: "column", alignItems: "center", gap: 48
         }}>
           {/* photo + identity */}
-          <div style={{ display: "flex", alignItems: "center", gap: 48 }}>
+          <div style={{
+            display: "flex", alignItems: "center",
+            flexDirection: isMobile ? "column" : "row",
+            gap: isMobile ? 32 : 48,
+            textAlign: isMobile ? "center" : "left"
+          }}>
             <HeroPicture />
             <div>
               <div style={{
@@ -1810,7 +1854,7 @@ function Portfolio() {
       </div>
 
       {/* CONCEPT FIELD */}
-      <ConceptField />
+      {!isMobile && <ConceptField />}
 
       {/* ABOUT */}
       <AboutSection />
