@@ -491,21 +491,21 @@ const SERIF = "'Spectral', 'Georgia', serif";
 
 // Dark palette
 const D = {
-  bg: "#0e0f12",
-  bg2: "#131519",
-  bg3: "#181b20",
-  surface: "#1c2028",
-  surfaceHi: "#222833",
-  border: "rgba(255,255,255,0.07)",
-  borderMed: "rgba(255,255,255,0.12)",
-  borderHi: "rgba(255,255,255,0.18)",
-  text: "#e8e4da",
-  textMid: "#a09890",
-  textDim: "#60605a",
-  accent1: "#7a5ce0",  // quantum purple
-  accent2: "#20c0a8",  // teal/algo
-  accent3: "#d4880a",  // amber photonics
-  accent4: "#c84040",  // red mechanics
+  bg: "#1a1c21",
+  bg2: "#21242a",
+  bg3: "#272b33",
+  surface: "#2d323c",
+  surfaceHi: "#363c48",
+  border: "rgba(255,255,255,0.12)",
+  borderMed: "rgba(255,255,255,0.18)",
+  borderHi: "rgba(255,255,255,0.26)",
+  text: "#f6f5ef",
+  textMid: "#b5aea6",
+  textDim: "#7c7c74",
+  accent1: "#967bf0",  // quantum purple
+  accent2: "#3adac4",  // teal/algo
+  accent3: "#eba628",  // amber photonics
+  accent4: "#e26060",  // red mechanics
 };
 
 
