@@ -1051,11 +1051,11 @@ function ProjectsSection() {
           opacity: isDark ? 0.6 : 0.4
         }} />
 
-        <div style={{ position: "absolute", top: isMobile ? 32 : 64, left: isMobile ? 24 : 48, zIndex: 10 }}>
+        <div style={{ position: "absolute", top: isMobile ? 20 : 64, left: isMobile ? 24 : 48, zIndex: 10 }}>
           <SectionLabel n="01" label="Pinned artifacts" />
         </div>
         <div style={{
-          position: "absolute", top: isMobile ? 32 : 68, right: isMobile ? 24 : 48, zIndex: 10,
+          position: "absolute", top: isMobile ? 22 : 68, right: isMobile ? 24 : 48, zIndex: 10,
           display: "flex", gap: 6, alignItems: "center"
         }}>
           {PROJECTS.map((_, i) => (
@@ -1080,11 +1080,11 @@ function ProjectsSection() {
           {/* LEFT */}
           <div style={{
             display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: isMobile ? "flex-start" : "center",
-            padding: isMobile ? "80px 24px 20px 24px" : "96px 36px 60px 48px", position: "relative", zIndex: 5,
-            height: isMobile ? "46%" : "auto"
+            padding: isMobile ? "54px 24px 8px 24px" : "96px 36px 60px 48px", position: "relative", zIndex: 5,
+            height: isMobile ? "44%" : "auto"
           }}>
             <div style={{ width: "100%", maxWidth: 520, height: isMobile ? "100%" : "auto", display: "flex", flexDirection: "column", justifyContent: isMobile ? "flex-start" : "center" }}>
-              <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: isMobile ? 12 : 20 }}>
+              <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: isMobile ? 10 : 20 }}>
                 {project.tags.map((t) => (
                   <span key={t} style={{
                     fontSize: 9.5, fontFamily: MONO, letterSpacing: "0.08em",
@@ -1097,21 +1097,21 @@ function ProjectsSection() {
               </div>
               <h2 key={`t-${activeIdx}`} style={{
                 fontFamily: SERIF,
-                fontSize: isMobile ? "clamp(20px, 6vw, 24px)" : "clamp(22px,2.6vw,34px)",
+                fontSize: isMobile ? "clamp(19px, 5.5vw, 22px)" : "clamp(22px,2.6vw,34px)",
                 fontWeight: 600, color: T.text,
-                margin: isMobile ? "0 0 8px" : "0 0 16px", lineHeight: 1.2, letterSpacing: "-0.01em",
+                margin: isMobile ? "0 0 6px" : "0 0 16px", lineHeight: 1.2, letterSpacing: "-0.01em",
                 animation: "slideUp 0.45s cubic-bezier(0.22,1,0.36,1)"
               }}>
                 {project.title}
               </h2>
               <p key={`d-${activeIdx}`} style={{
-                fontSize: isMobile ? 13.5 : 15, color: T.textMid, lineHeight: isMobile ? 1.5 : 1.78,
-                margin: isMobile ? "0 0 12px" : "0 0 24px", fontFamily: SERIF,
+                fontSize: isMobile ? 12.5 : 15, color: T.textMid, lineHeight: isMobile ? 1.4 : 1.78,
+                margin: isMobile ? "0 0 10px" : "0 0 24px", fontFamily: SERIF,
                 animation: "slideUp 0.55s cubic-bezier(0.22,1,0.36,1)"
               }}>
                 {project.description}
               </p>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: isMobile ? 16 : 24 }}>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: isMobile ? 8 : 24 }}>
                 {project.tools.map((t) => (
                   <span key={t} style={{
                     fontSize: 9.5, fontFamily: MONO,
@@ -1169,9 +1169,9 @@ function ProjectsSection() {
 
           {/* RIGHT — graph */}
           <div style={{
-            padding: isMobile ? "10px 24px 32px 24px" : "96px 40px 60px 20px",
+            padding: isMobile ? "4px 24px 24px 24px" : "96px 40px 60px 20px",
             display: "flex", alignItems: "center", position: "relative", zIndex: 5,
-            height: isMobile ? "54%" : "auto"
+            height: isMobile ? "56%" : "auto"
           }}>
             <div style={{
               position: "relative", width: "100%", height: "100%", minHeight: isMobile ? 0 : 400, zIndex: 1,
