@@ -1169,7 +1169,7 @@ function ProjectsSection() {
 
           {/* RIGHT — graph */}
           <div style={{
-            padding: isMobile ? "4px 24px 64px 24px" : "96px 40px 60px 20px",
+            padding: isMobile ? "4px 24px 120px 24px" : "96px 40px 60px 20px",
             display: "flex", alignItems: "center", position: "relative", zIndex: 5,
             height: "auto", flex: isMobile ? 1 : "unset"
           }}>
@@ -2220,6 +2220,7 @@ function Portfolio() {
   const isMobile = useMediaQuery("(max-width: 850px)");
 
   const [navVisible, setNavVisible] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setNavVisible(window.scrollY > 60);
@@ -2235,7 +2236,7 @@ function Portfolio() {
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
         display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "0 48px", height: 52,
+        padding: isMobile ? "0 24px" : "0 48px", height: 52,
         background: navVisible ? (isDark ? "rgba(14,15,18,0.95)" : "rgba(244,242,238,0.95)") : "transparent",
         backdropFilter: navVisible ? "blur(16px)" : "none",
         borderBottom: navVisible ? `0.5px solid ${T.border}` : "none",
@@ -2244,8 +2245,8 @@ function Portfolio() {
         <span style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, letterSpacing: "0.12em" }}>
           HH — 2025
         </span>
-        <div style={{ display: "flex", gap: 30, alignItems: "center" }}>
-          <button onClick={toggleTheme} title="Toggle Theme" style={{ background: "transparent", border: "none", cursor: "pointer", color: T.textDim, transition: "color 0.2s", display: "flex", alignItems: "center" }} onMouseEnter={e => e.currentTarget.style.color = T.text} onMouseLeave={e => e.currentTarget.style.color = T.textDim}>
+        <div style={{ display: "flex", gap: isMobile ? 12 : 30, alignItems: "center", position: "relative" }}>
+          <button onClick={toggleTheme} title="Toggle Theme" style={{ background: "transparent", border: "none", cursor: "pointer", color: T.textDim, transition: "color 0.2s", display: "flex", alignItems: "center", padding: "6px" }} onMouseEnter={e => e.currentTarget.style.color = T.text} onMouseLeave={e => e.currentTarget.style.color = T.textDim}>
             {isDark ? (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
@@ -2264,20 +2265,47 @@ function Portfolio() {
               </svg>
             )}
           </button>
-          {[["work", "#work"], ["field", "#field"], ["experience", "#experience"],
-          ["exploring", "#exploring"], ["about", "#about"]]
-            .filter(([s]) => !(isMobile && s === "field"))
-            .map(([s, h]) => (
-              <a key={s} href={h} style={{
-                fontFamily: MONO, fontSize: 10.5, color: T.textDim,
-                textDecoration: "none", letterSpacing: "0.08em",
-                transition: "color 0.2s"
-              }}
-                onMouseEnter={e => e.target.style.color = T.text}
-                onMouseLeave={e => e.target.style.color = T.textDim}>
-                {s}
-              </a>
-            ))}
+          {!isMobile ? (
+            [["work", "#work"], ["field", "#field"], ["experience", "#experience"],
+            ["exploring", "#exploring"], ["about", "#about"]]
+              .map(([s, h]) => (
+                <a key={s} href={h} style={{
+                  fontFamily: MONO, fontSize: 10.5, color: T.textDim,
+                  textDecoration: "none", letterSpacing: "0.08em",
+                  transition: "color 0.2s"
+                }}
+                  onMouseEnter={e => e.target.style.color = T.text}
+                  onMouseLeave={e => e.target.style.color = T.textDim}>
+                  {s}
+                </a>
+              ))
+          ) : (
+            <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: "transparent", border: "none", cursor: "pointer", color: T.textDim, display: "flex", alignItems: "center", padding: "6px" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <circle cx="19" cy="12" r="1.5"></circle>
+                <circle cx="5" cy="12" r="1.5"></circle>
+              </svg>
+            </button>
+          )}
+
+          {isMobile && menuOpen && (
+            <div style={{
+              position: "absolute", top: 40, right: 0, background: isDark ? "rgba(20,22,26,0.98)" : "rgba(250,248,245,0.98)",
+              border: `0.5px solid ${T.border}`, borderRadius: 10, padding: "8px 0",
+              display: "flex", flexDirection: "column", minWidth: 160,
+              boxShadow: isDark ? "0 10px 40px rgba(0,0,0,0.4)" : "0 10px 40px rgba(0,0,0,0.1)",
+              backdropFilter: "blur(16px)", zIndex: 200
+            }}>
+              {[["work", "#work"], ["experience", "#experience"], ["exploring", "#exploring"], ["about", "#about"]].map(([s, h]) => (
+                <a key={s} href={h} onClick={() => setMenuOpen(false)} style={{
+                  padding: "12px 20px", fontFamily: MONO, fontSize: 11, color: T.textDim, textDecoration: "none", letterSpacing: "0.08em"
+                }}>
+                  {s}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
 
