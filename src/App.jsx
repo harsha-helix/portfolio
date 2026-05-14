@@ -1169,7 +1169,7 @@ function ProjectsSection() {
 
           {/* RIGHT — graph */}
           <div style={{
-            padding: isMobile ? "4px 24px 24px 24px" : "96px 40px 60px 20px",
+            padding: isMobile ? "4px 24px 64px 24px" : "96px 40px 60px 20px",
             display: "flex", alignItems: "center", position: "relative", zIndex: 5,
             height: "auto", flex: isMobile ? 1 : "unset"
           }}>
