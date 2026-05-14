@@ -1306,182 +1306,767 @@ function ConceptField() {
 }
 
 /* ═══════════════════════════════════════════════
+   CONWAY'S GAME OF LIFE (BACKGROUND)
+═══════════════════════════════════════════════ */
+function ConwaysGameOfLife() {
+  const { isDark, T } = useContext(ThemeContext);
+  const canvasRef = useRef();
+
+  const stateRef = useRef({
+    cols: 0, rows: 0,
+    grid: [], // visual states [0..1]
+    logicGrid: [], // true sim states 0 or 1
+    cellSize: typeof window !== "undefined" && window.innerWidth < 850 ? 18 : 24,
+    lastLogicTick: 0,
+    totalElapsed: 0  // accumulated ms — useAnimationFrame gives delta, not timestamp
+  });
+
+  const mouseRef = useRef({ x: -100, y: -100 });
+
+  useAnimationFrame((dt) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+
+    const targetWidth = Math.floor(canvas.offsetWidth * dpr);
+    const targetHeight = Math.floor(canvas.offsetHeight * dpr);
+
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      ctx.scale(dpr, dpr);
+      const cols = Math.floor(canvas.offsetWidth / stateRef.current.cellSize) + 1;
+      const rows = Math.floor(canvas.offsetHeight / stateRef.current.cellSize) + 1;
+      stateRef.current.cols = cols;
+      stateRef.current.rows = rows;
+
+      const initialGrid = Array(rows).fill(0).map(() =>
+        Array(cols).fill(0).map(() => Math.random() > 0.90 ? 1 : 0)
+      );
+      stateRef.current.logicGrid = initialGrid;
+      stateRef.current.grid = initialGrid.map(row => [...row]);
+    }
+
+    const { cols, rows, grid, logicGrid, cellSize } = stateRef.current;
+
+    // Accumulate total elapsed time (useAnimationFrame gives delta, not timestamp)
+    stateRef.current.totalElapsed += dt;
+    const totalTime = stateRef.current.totalElapsed;
+
+    // 1. GAME OF LIFE LOGIC (runs every 1200ms)
+    if (totalTime - stateRef.current.lastLogicTick > 1200) {
+      stateRef.current.lastLogicTick = totalTime;
+
+      const newLogic = Array(rows).fill(0).map(() => Array(cols).fill(0));
+      let aliveCount = 0;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          let neighbors = 0;
+          for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+              if (i === 0 && j === 0) continue;
+              const nr = r + i, nc = c + j;
+              if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                if (logicGrid[nr][nc] === 1) neighbors++;
+              }
+            }
+          }
+          let currentlyAlive = logicGrid[r][c] === 1;
+          let nextAlive = currentlyAlive;
+          if (currentlyAlive && (neighbors < 2 || neighbors > 3)) nextAlive = false;
+          if (!currentlyAlive && neighbors === 3) nextAlive = true;
+
+          // Ambient entropy to prevent total stabilization
+          if (Math.random() < 0.003) nextAlive = true; // 0.3% chance spontaneous generation
+          if (currentlyAlive && Math.random() < 0.02) nextAlive = false; // 2% chance spontaneous decay
+
+          if (nextAlive) {
+            newLogic[r][c] = 1;
+            aliveCount++;
+          }
+        }
+      }
+
+      // Seed if population too low or randomly
+      if (aliveCount < (rows * cols) * 0.05 || Math.random() < 0.2) {
+        let sr = Math.floor(Math.random() * rows);
+        let sc = Math.floor(Math.random() * cols);
+        if (sr + 1 < rows && sc + 2 < cols) {
+          newLogic[sr][sc + 1] = 1;
+          newLogic[sr + 1][sc + 2] = 1;
+          newLogic[sr + 2][sc] = 1; newLogic[sr + 2][sc + 1] = 1; newLogic[sr + 2][sc + 2] = 1;
+        }
+      }
+
+      // Mouse interactions inject life directly into logic grid
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+      if (mx >= 0 && my >= 0) {
+        let mc = Math.floor(mx / cellSize);
+        let mr = Math.floor(my / cellSize);
+        if (mr >= 0 && mr < rows && mc >= 0 && mc < cols) {
+          newLogic[mr][mc] = 1;
+          if (Math.random() > 0.5 && mr + 1 < rows) newLogic[mr + 1][mc] = 1;
+          if (Math.random() > 0.5 && mc + 1 < cols) newLogic[mr][mc + 1] = 1;
+        }
+      }
+
+      stateRef.current.logicGrid = newLogic;
+    }
+
+    // 2. VISUAL FADE LOGIC & RENDER (runs every frame)
+    const cw = canvas.offsetWidth;
+    const ch = canvas.offsetHeight;
+    ctx.clearRect(0, 0, cw, ch);
+    const baseAlpha = isDark ? 0.35 : 0.25;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        let target = stateRef.current.logicGrid[r][c];
+        let current = grid[r][c];
+
+        if (current < target) {
+          current = Math.min(target, current + 0.05); // Smooth fade in
+        } else if (current > target) {
+          current = Math.max(target, current - 0.03); // Smooth fade out
+        }
+        grid[r][c] = current;
+
+        // Render — dot matrix style
+        {
+          const colorHex = T.accent1;
+          const rC = parseInt(colorHex.slice(1, 3), 16) || 150;
+          const gC = parseInt(colorHex.slice(3, 5), 16) || 120;
+          const bC = parseInt(colorHex.slice(5, 7), 16) || 240;
+          const cx = c * cellSize + cellSize / 2;
+          const cy = r * cellSize + cellSize / 2;
+
+          // Dead dot — always drawn, very faint
+          const deadAlpha = isDark ? 0.10 : 0.07;
+          ctx.fillStyle = `rgba(${rC},${gC},${bC},${deadAlpha})`;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Alive dot — grows and brightens as cell comes alive
+          if (current > 0) {
+            const liveRadius = 2 + current * 3.5;  // 2..5.5 px
+            ctx.fillStyle = `rgba(${rC},${gC},${bC},${current * baseAlpha})`;
+            ctx.beginPath();
+            ctx.arc(cx, cy, liveRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+    }
+  });
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "all", cursor: "crosshair" }}
+      onPointerMove={(e) => {
+        const rect = canvasRef.current.getBoundingClientRect();
+        mouseRef.current.x = e.clientX - rect.left;
+        mouseRef.current.y = e.clientY - rect.top;
+      }}
+      onPointerLeave={() => { mouseRef.current = { x: -100, y: -100 }; }}
+    />
+  );
+}
+
+/* ═══════════════════════════════════════════════
    EXPERIENCE SECTION (NEW)
 ═══════════════════════════════════════════════ */
 function ExperienceSection() {
   const { isDark, T } = useContext(ThemeContext);
-  const [expanded, setExpanded] = useState(null);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
 
   return (
-    <section id="experience" style={{ padding: "90px 0", background: T.bg3 }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px" }}>
-        <div style={{ marginBottom: 52 }}>
+    <section id="experience" style={{ padding: "100px 0", background: "transparent", position: "relative", overflow: "hidden" }}>
+
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 2 }}>
+        <div style={{ marginBottom: 60 }}>
           <SectionLabel n="03" label="Experience" />
           <SectionHeading>Where I've Worked</SectionHeading>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", position: "relative" }}>
-          {/* vertical timeline line */}
-          <div style={{
-            position: "absolute", left: 0, top: 8, bottom: 8, width: 1,
-            background: `linear-gradient(to bottom, ${T.accent1}60, ${T.accent2}60, transparent)`
-          }} />
-
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           {EXPERIENCE.map((exp, i) => {
-            const isOpen = expanded === i;
+            const isHovered = hoveredIdx === i;
             return (
-              <div key={i} style={{ paddingLeft: 32, paddingBottom: 0, position: "relative" }}>
-                {/* timeline dot */}
+              <div
+                key={i}
+                onMouseEnter={() => setHoveredIdx(i)}
+                onMouseLeave={() => setHoveredIdx(null)}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "180px 1fr",
+                  gap: 32,
+                  padding: "36px",
+                  background: isDark
+                    ? `rgba(28, 30, 36, ${isHovered ? 0.75 : 0.55})`
+                    : `rgba(255, 255, 255, ${isHovered ? 0.9 : 0.6})`,
+                  backdropFilter: "blur(14px)",
+                  borderRadius: 16,
+                  border: `0.5px solid ${isHovered ? exp.color + "60" : T.borderMed}`,
+                  boxShadow: isHovered
+                    ? `0 12px 40px ${exp.color}15, inset 0 0 0 1px ${exp.color}20`
+                    : `0 8px 30px rgba(0,0,0,0.04)`,
+                  transition: "all 0.4s cubic-bezier(0.22,1,0.36,1)",
+                  transform: isHovered ? "translateY(-3px)" : "translateY(0)"
+                }}
+              >
+                {/* Left side: Dates */}
                 <div style={{
-                  position: "absolute", left: -5, top: 24, width: 11, height: 11,
-                  borderRadius: "50%", background: T.bg3, border: `1.5px solid ${exp.color}`,
-                  boxShadow: `0 0 10px ${exp.color}60`, zIndex: 1
-                }} />
+                  fontFamily: MONO, fontSize: 13, color: isHovered ? exp.color : T.textDim,
+                  display: "flex", flexDirection: "column", gap: 6,
+                  paddingRight: 32, borderRight: `1px solid ${isHovered ? exp.color + "40" : T.border}`,
+                  transition: "all 0.4s"
+                }}>
+                  {exp.period.split("—").map((p, pIdx) => {
+                    const pt = p.trim();
+                    return (
+                      <span key={pIdx} style={{
+                        fontWeight: pt === "present" ? 600 : 400,
+                        opacity: pt === "present" ? 1 : 0.75
+                      }}>
+                        {pt}{pIdx === 0 && " —"}
+                      </span>
+                    );
+                  })}
+                </div>
 
-                <div
-                  onClick={() => setExpanded(isOpen ? null : i)}
-                  style={{
-                    cursor: "pointer", padding: "20px 24px", marginBottom: 12,
-                    background: isOpen ? T.surfaceHi : T.surface,
-                    border: `0.5px solid ${isOpen ? exp.color + "50" : T.border}`,
-                    borderRadius: 10, transition: "all 0.35s cubic-bezier(0.22,1,0.36,1)"
-                  }}>
+                {/* Right side: Content */}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                    <div style={{
+                      width: 8, height: 8, borderRadius: "50%", background: exp.color,
+                      boxShadow: isHovered ? `0 0 12px ${exp.color}` : "none",
+                      transition: "all 0.4s"
+                    }} />
+                    <span style={{ fontSize: 20, fontFamily: SERIF, fontWeight: 600, color: T.text, lineHeight: 1.1 }}>
+                      {exp.role}
+                    </span>
+                  </div>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                  <div style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, marginBottom: 20, letterSpacing: "0.02em" }}>
+                    // {exp.org}
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {exp.points.map((pt, j) => (
+                      <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                         <div style={{
-                          width: 6, height: 6, borderRadius: "50%", background: exp.color,
-                          boxShadow: `0 0 6px ${exp.color}`
+                          width: 4, height: 4, borderRadius: "50%", background: isHovered ? exp.color : T.textDim,
+                          marginTop: 8, flexShrink: 0, opacity: isHovered ? 0.8 : 0.4,
+                          transition: "all 0.4s"
                         }} />
-                        <span style={{
-                          fontFamily: MONO, fontSize: 10, color: exp.color,
-                          letterSpacing: "0.1em", textTransform: "uppercase"
-                        }}>
-                          {exp.role}
+                        <span style={{ fontSize: 14.5, color: T.textMid, lineHeight: 1.6, fontFamily: SERIF }}>
+                          {pt}
                         </span>
                       </div>
-                      <div style={{
-                        fontSize: 17, fontWeight: 500, color: T.text, fontFamily: SERIF,
-                        marginBottom: 3
-                      }}>
-                        {exp.org}
-                      </div>
-                      {exp.advisor && (
-                        <div style={{ fontFamily: MONO, fontSize: 10, color: T.textDim }}>
-                          {exp.advisor}
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-                      <span style={{ fontFamily: MONO, fontSize: 10, color: T.textDim }}>
-                        {exp.period}
-                      </span>
-                      <span style={{
-                        color: T.textDim, fontSize: 12,
-                        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                        transition: "transform 0.3s"
-                      }}>▾</span>
-                    </div>
+                    ))}
                   </div>
 
-                  {/* expandable points */}
-                  <div style={{
-                    maxHeight: isOpen ? 200 : 0, overflow: "hidden",
-                    transition: "max-height 0.4s cubic-bezier(0.22,1,0.36,1)",
-                    opacity: isOpen ? 1 : 0
-                  }}>
-                    <div style={{ paddingTop: 16, borderTop: `0.5px solid ${T.border}`, marginTop: 14 }}>
-                      {exp.points.map((pt, j) => (
-                        <div key={j} style={{
-                          display: "flex", gap: 12, alignItems: "flex-start",
-                          marginBottom: 9
-                        }}>
-                          <span style={{ color: exp.color, fontSize: 10, marginTop: 2, flexShrink: 0 }}>◦</span>
-                          <span style={{ fontSize: 13.5, color: T.textMid, lineHeight: 1.6, fontFamily: SERIF }}>
-                            {pt}
-                          </span>
-                        </div>
-                      ))}
+                  {exp.advisor && (
+                    <div style={{ marginTop: 24, display: "inline-block", background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)", padding: "6px 12px", borderRadius: 6 }}>
+                      <span style={{ fontSize: 11, color: T.textDim, fontFamily: MONO }}>
+                        advisor // <span style={{ color: T.text }}>{exp.advisor}</span>
+                      </span>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Required for responsive grid layout without breaking cleanly */}
+      <style>{`
+        @media (max-width: 850px) {
+          #experience > div > div > div > div {
+             grid-template-columns: 1fr !important;
+             gap: 16px !important;
+             padding: 24px !important;
+          }
+          #experience > div > div > div > div > div:first-child {
+             border-right: none !important;
+             border-bottom: 1px solid var(--border) !important;
+             padding-right: 0 !important;
+             padding-bottom: 16px !important;
+             flex-direction: row !important;
+             align-items: center;
+          }
+        }
+      `}</style>
     </section>
   );
 }
 
 /* ═══════════════════════════════════════════════
-   EXPLORING SECTION (DARK)
+   EXPLORING SECTION (ACTIVE THREADS)
 ═══════════════════════════════════════════════ */
+function AnimatedNoiseLayer() {
+  const { isDark } = useContext(ThemeContext);
+  return (
+    <div style={{
+      position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0,
+      opacity: isDark ? 0.05 : 0.08,
+      backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
+      animation: "noiseShift 8s steps(10) infinite"
+    }}>
+      <style>{`
+        @keyframes noiseShift {
+          0% { background-position: 0 0; }
+          10% { background-position: -5% -10%; }
+          20% { background-position: -15% 5%; }
+          30% { background-position: 7% -25%; }
+          40% { background-position: 20% 25%; }
+          50% { background-position: -25% 10%; }
+          60% { background-position: 15% 5%; }
+          70% { background-position: 0% 15%; }
+          80% { background-position: 25% 35%; }
+          90% { background-position: -10% 10%; }
+          100% { background-position: 0 0; }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   CYCLIC CELLULAR AUTOMATON
+   Each cell cycles 0 → N-1 → 0. It advances one
+   step when ≥ threshold neighbours are one ahead.
+   Self-organises into rotating spiral waves.
+══════════════════════════════════════════════ */
+function CyclicCACanvas() {
+  const { isDark, T } = useContext(ThemeContext);
+  const canvasRef = useRef();
+  const TRef = useRef(T);
+  const isDarkRef = useRef(isDark);
+  useEffect(() => { TRef.current = T; isDarkRef.current = isDark; }, [T, isDark]);
+
+  const CELL = 10;    // px per cell — large enough to see the spirals
+  const STATES = 5;   // how many states in the cycle
+  const THRESHOLD = 1; // neighbours needed to advance
+  const TICK_MS = 120; // ms between generations
+
+  const stateRef = useRef({
+    logic: null,     // Uint8Array — current state
+    visual: null,    // Float32Array — display brightness 0..1
+    rows: 0, cols: 0,
+    elapsed: 0, lastTick: 0,
+  });
+
+  useAnimationFrame((dt) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width / dpr;
+    const H = canvas.height / dpr;
+    const ctx = canvas.getContext("2d");
+    const s = stateRef.current;
+    s.elapsed += dt;
+
+    const cols = Math.ceil(W / CELL);
+    const rows = Math.ceil(H / CELL);
+
+    // Initialise on first run or resize
+    if (s.cols !== cols || s.rows !== rows) {
+      s.cols = cols; s.rows = rows;
+      s.logic = new Uint8Array(rows * cols).map(() => (Math.random() * STATES) | 0);
+      s.visual = new Float32Array(rows * cols);
+      s.lastTick = s.elapsed;
+    }
+
+    // Advance logic every TICK_MS
+    if (s.elapsed - s.lastTick > TICK_MS) {
+      s.lastTick = s.elapsed;
+      const next = new Uint8Array(rows * cols);
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cur = s.logic[r * cols + c];
+          const successor = (cur + 1) % STATES;
+          // Count neighbours in the successor state
+          let cnt = 0;
+          if (r > 0 && s.logic[(r - 1) * cols + c] === successor) cnt++;
+          if (r < rows - 1 && s.logic[(r + 1) * cols + c] === successor) cnt++;
+          if (c > 0 && s.logic[r * cols + (c - 1)] === successor) cnt++;
+          if (c < cols - 1 && s.logic[r * cols + (c + 1)] === successor) cnt++;
+          next[r * cols + c] = cnt >= THRESHOLD ? successor : cur;
+        }
+      }
+      s.logic = next;
+    }
+
+    // Smooth visual fade toward logic
+    ctx.clearRect(0, 0, W, H);
+    const hex = TRef.current.accent1 || "#967bf0";
+    const rC = parseInt(hex.slice(1, 3), 16);
+    const gC = parseInt(hex.slice(3, 5), 16);
+    const bC = parseInt(hex.slice(5, 7), 16);
+    const baseAlpha = isDarkRef.current ? 0.35 : 0.25;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const idx = r * cols + c;
+        // Map state to target brightness: state 0 → 0, state N-1 → 1
+        const target = s.logic[idx] / (STATES - 1);
+        let cur = s.visual[idx];
+        cur += cur < target ? 0.05 : cur > target ? -0.03 : 0;
+        cur = Math.max(0, Math.min(1, cur));
+        s.visual[idx] = cur;
+
+        if (cur > 0.02) {
+          ctx.fillStyle = `rgba(${rC},${gC},${bC},${cur * baseAlpha})`;
+          ctx.beginPath();
+          ctx.roundRect(c * CELL + 2, r * CELL + 2, CELL - 4, CELL - 4, 2);
+          ctx.fill();
+        }
+      }
+    }
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      canvas.getContext("2d").scale(dpr, dpr);
+      stateRef.current.cols = 0;
+    };
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas); resize();
+    return () => ro.disconnect();
+  }, []);
+
+  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />;
+}
+
+/* ══════════════════════════════════════════════
+   2D ISING SPIN LATTICE — Metropolis Monte Carlo
+   Styled identically to the Experience section
+   (24 px cells, 1200 ms tick, fade ±0.05/0.03)
+══════════════════════════════════════════════ */
+function IsingCanvas() {
+  const { isDark, T } = useContext(ThemeContext);
+  const canvasRef = useRef();
+  const TRef = useRef(T);
+  const isDarkRef = useRef(isDark);
+  useEffect(() => { TRef.current = T; isDarkRef.current = isDark; }, [T, isDark]);
+
+  const CELL = typeof window !== "undefined" && window.innerWidth < 850 ? 18 : 24;
+  const J = 1;
+
+  const stateRef = useRef({
+    logic: null,   // Int8Array (+1 / -1 spins)
+    visual: null,  // Float32Array (0..1 brightness per cell)
+    rows: 0, cols: 0,
+    elapsed: 0, lastTick: 0,
+  });
+
+  useAnimationFrame((dt) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width / dpr;
+    const H = canvas.height / dpr;
+    const ctx = canvas.getContext("2d");
+    const s = stateRef.current;
+    s.elapsed += dt;
+
+    const cols = Math.floor(canvas.offsetWidth / CELL) + 1;
+    const rows = Math.floor(canvas.offsetHeight / CELL) + 1;
+
+    if (s.cols !== cols || s.rows !== rows) {
+      s.cols = cols; s.rows = rows;
+      s.logic = new Int8Array(rows * cols).map(() => Math.random() < 0.5 ? 1 : -1);
+      s.visual = new Float32Array(rows * cols);
+      s.lastTick = s.elapsed;
+    }
+
+    // One full Metropolis sweep every 1200 ms (matches GoL tick)
+    if (s.elapsed - s.lastTick > 1200) {
+      s.lastTick = s.elapsed;
+      // Temperature oscillates 1.8 ↔ 3.2 through Tc ≈ 2.27
+      const temp = 2.5 + Math.sin(s.elapsed * 0.000020) * 0.7;
+      const N = rows * cols;
+      for (let i = 0; i < N; i++) {
+        const idx = (Math.random() * N) | 0;
+        const r = (idx / cols) | 0;
+        const c = idx % cols;
+        const spin = s.logic[idx];
+        const nb =
+          s.logic[((r - 1 + rows) % rows) * cols + c] +
+          s.logic[((r + 1) % rows) * cols + c] +
+          s.logic[r * cols + (c - 1 + cols) % cols] +
+          s.logic[r * cols + (c + 1) % cols];
+        const dE = 2 * J * spin * nb;
+        if (dE <= 0 || Math.random() < Math.exp(-dE / temp)) s.logic[idx] = -spin;
+      }
+    }
+
+    // Visual fade toward logic — matches GoL visual treatment
+    ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    const hex = TRef.current.accent1 || "#967bf0";
+    const rC = parseInt(hex.slice(1, 3), 16);
+    const gC = parseInt(hex.slice(3, 5), 16);
+    const bC = parseInt(hex.slice(5, 7), 16);
+    const baseAlpha = isDarkRef.current ? 0.35 : 0.25;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const idx = r * cols + c;
+        const target = s.logic[idx] === 1 ? 1 : 0;
+        let cur = s.visual[idx];
+        if (cur < target) cur = Math.min(target, cur + 0.05);
+        else if (cur > target) cur = Math.max(target, cur - 0.03);
+        s.visual[idx] = cur;
+
+        if (cur > 0) {
+          ctx.fillStyle = `rgba(${rC},${gC},${bC},${cur * baseAlpha})`;
+          ctx.beginPath();
+          ctx.roundRect(c * CELL + 2, r * CELL + 2, CELL - 4, CELL - 4, 3);
+          ctx.fill();
+        }
+      }
+    }
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      canvas.getContext("2d").scale(dpr, dpr);
+      stateRef.current.cols = 0;
+    };
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas); resize();
+    return () => ro.disconnect();
+  }, []);
+
+  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />;
+}
+
+/* ══════════════════════════════════════════════
+   GAME-OF-LIFE DOT BACKGROUND (shared visual style)
+   Independent simulation — reused in Active Threads
+══════════════════════════════════════════════ */
+function GoLDotBg() {
+  const { isDark, T } = useContext(ThemeContext);
+  const canvasRef = useRef();
+  const TRef = useRef(T);
+  const isDarkRef = useRef(isDark);
+  useEffect(() => { TRef.current = T; isDarkRef.current = isDark; }, [T, isDark]);
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 850;
+  const CELL = isMobile ? 18 : 24;
+
+  const stateRef = useRef({
+    logicGrid: null, grid: null,
+    rows: 0, cols: 0,
+    totalElapsed: 0, lastLogicTick: 0,
+  });
+
+  useAnimationFrame((dt) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const cellSize = CELL;
+    const cols = Math.ceil(canvas.offsetWidth / cellSize);
+    const rows = Math.ceil(canvas.offsetHeight / cellSize);
+    const s = stateRef.current;
+
+    if (s.cols !== cols || s.rows !== rows) {
+      s.cols = cols; s.rows = rows;
+      s.logicGrid = Array.from({ length: rows }, () =>
+        Array.from({ length: cols }, () => Math.random() < 0.25 ? 1 : 0));
+      s.grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+      s.lastLogicTick = s.totalElapsed;
+    }
+
+    s.totalElapsed += dt;
+
+    // GoL logic tick every 1200 ms
+    if (s.totalElapsed - s.lastLogicTick > 1200) {
+      s.lastLogicTick = s.totalElapsed;
+      const next = Array.from({ length: rows }, () => Array(cols).fill(0));
+      let alive = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          let nb = 0;
+          for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+            if (i === 0 && j === 0) continue;
+            const nr = r + i, nc = c + j;
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) nb += s.logicGrid[nr][nc];
+          }
+          if (s.logicGrid[r][c] === 1) next[r][c] = (nb === 2 || nb === 3) ? 1 : 0;
+          else next[r][c] = nb === 3 ? 1 : 0;
+          alive += next[r][c];
+        }
+      }
+      // Re-seed if nearly dead
+      if (alive < rows * cols * 0.02) {
+        for (let r = 0; r < rows; r++)
+          for (let c = 0; c < cols; c++)
+            next[r][c] = Math.random() < 0.2 ? 1 : 0;
+      }
+      s.logicGrid = next;
+    }
+
+    ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+    const theme = TRef.current;
+    const dark = isDarkRef.current;
+    const hex = theme.accent1 || "#967bf0";
+    const rC = parseInt(hex.slice(1, 3), 16);
+    const gC = parseInt(hex.slice(3, 5), 16);
+    const bC = parseInt(hex.slice(5, 7), 16);
+    const baseAlpha = dark ? 0.35 : 0.25;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const target = s.logicGrid[r][c];
+        let cur = s.grid[r][c];
+        if (cur < target) cur = Math.min(target, cur + 0.05);
+        else if (cur > target) cur = Math.max(target, cur - 0.03);
+        s.grid[r][c] = cur;
+
+        const cx = c * cellSize + cellSize / 2;
+        const cy = r * cellSize + cellSize / 2;
+        const deadAlpha = dark ? 0.10 : 0.07;
+        ctx.fillStyle = `rgba(${rC},${gC},${bC},${deadAlpha})`;
+        ctx.beginPath(); ctx.arc(cx, cy, 2, 0, Math.PI * 2); ctx.fill();
+        if (cur > 0) {
+          ctx.fillStyle = `rgba(${rC},${gC},${bC},${cur * baseAlpha})`;
+          ctx.beginPath(); ctx.arc(cx, cy, 2 + cur * 3.5, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+    }
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr;
+      canvas.height = canvas.offsetHeight * dpr;
+      canvas.getContext("2d").scale(dpr, dpr);
+      stateRef.current.cols = 0;
+    };
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas); resize();
+    return () => ro.disconnect();
+  }, []);
+
+  return <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />;
+}
+
+/* ══════════════════════════════════════════════
+   EXPLORING SECTION (ACTIVE THREADS)
+══════════════════════════════════════════════ */
 function ExploringSection() {
   const { isDark, T } = useContext(ThemeContext);
+  const isMobile = useMediaQuery("(max-width: 850px)");
+
+  const STATUS_COLORS_LIGHT = {
+    active: "#17a08c",
+    reading: "#5c42bd",
+    ongoing: "#c46d03",
+    new: "#b53131",
+  };
+
   return (
-    <section id="exploring" style={{ padding: "80px 0", background: T.bg }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px" }}>
-        <div style={{ marginBottom: 44 }}>
+    <section id="exploring" style={{ padding: isMobile ? "60px 0" : "80px 0", background: "transparent", position: "relative", overflow: "hidden" }}>
+
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "0 24px" : "0 48px", position: "relative", zIndex: 2 }}>
+        {/* Heading */}
+        <div style={{ marginBottom: isMobile ? 36 : 52 }}>
           <SectionLabel n="04" label="Currently exploring" />
           <SectionHeading>Active Threads</SectionHeading>
-          <p style={{ fontSize: 13.5, color: T.textDim, fontFamily: MONO, margin: "8px 0 0" }}>
-            Less polished. More notebook. Still curated.
+          <p style={{ fontSize: 13, color: T.textDim, fontFamily: MONO, margin: "8px 0 0", letterSpacing: "0.02em" }}>
+            Things I am thinking about right now.
           </p>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        {/* Single glass panel — terminal aesthetic */}
+        <div style={{
+          background: isDark ? "rgba(28,30,36,0.55)" : "rgba(255,255,255,0.60)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: `0.5px solid ${isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)"}`,
+          borderRadius: 12,
+          padding: isMobile ? "12px 20px" : "12px 32px",
+        }}>
           {EXPLORING.map((item, i) => {
-
-            const STATUS_COLORS_LIGHT = {
-              active: { bg: "rgba(23,160,140,0.12)", border: "rgba(23,160,140,0.25)", text: "#17a08c" },
-              reading: { bg: "rgba(92,66,189,0.12)", border: "rgba(92,66,189,0.25)", text: "#5c42bd" },
-              ongoing: { bg: "rgba(196,109,3,0.12)", border: "rgba(196,109,3,0.25)", text: "#c46d03" },
-              new: { bg: "rgba(181,49,49,0.12)", border: "rgba(181,49,49,0.25)", text: "#b53131" },
-            };
-            const sc = isDark
-              ? (STATUS_COLORS_DARK[item.status] || STATUS_COLORS_DARK.reading)
+            const dotColor = isDark
+              ? (STATUS_COLORS_DARK[item.status]?.text || STATUS_COLORS_DARK.reading.text)
               : (STATUS_COLORS_LIGHT[item.status] || STATUS_COLORS_LIGHT.reading);
 
             return (
               <div key={i} style={{
-                display: "grid", gridTemplateColumns: "28px 1fr auto",
-                gap: 24, alignItems: "center", padding: "20px 0",
-                borderBottom: `0.5px solid ${T.border}`
+                padding: isMobile ? "14px 0" : "16px 0",
+                borderBottom: i < EXPLORING.length - 1 ? `0.5px solid ${T.border}` : "none",
               }}>
-                <span style={{ fontFamily: MONO, fontSize: 10, color: T.textDim }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
+                {/* Prompt line: dot + label */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 5 }}>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: dotColor, opacity: 0.7 }}>❯</span>
                   <div style={{
-                    fontSize: 17, fontWeight: 500, color: T.text,
-                    fontFamily: SERIF, marginBottom: 4
+                    width: 5, height: 5, borderRadius: "50%",
+                    background: dotColor, boxShadow: `0 0 5px ${dotColor}`, flexShrink: 0,
+                    animation: item.status === "active" ? "pulseExplore 2.2s ease-in-out infinite" : "none"
+                  }} />
+                  <span style={{
+                    fontFamily: MONO, fontSize: isMobile ? 13 : 14,
+                    color: T.text, letterSpacing: "0.02em", fontWeight: 500,
                   }}>
                     {item.label}
-                  </div>
-                  <div style={{ fontSize: 11.5, color: T.textDim, fontFamily: MONO }}>
-                    {item.detail}
-                  </div>
+                  </span>
+                  <span style={{
+                    fontFamily: MONO, fontSize: 9, color: dotColor,
+                    letterSpacing: "0.14em", textTransform: "uppercase",
+                    marginLeft: "auto", opacity: 0.75, flexShrink: 0,
+                  }}>
+                    {item.status}
+                  </span>
                 </div>
-                <span style={{
-                  fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.08em",
-                  background: sc.bg, border: `0.5px solid ${sc.border}`,
-                  color: sc.text, borderRadius: 3, padding: "3px 10px",
-                  textTransform: "uppercase", whiteSpace: "nowrap"
+
+                {/* Detail line */}
+                <div style={{
+                  fontFamily: MONO, fontSize: 11, color: T.textDim,
+                  letterSpacing: "0.01em", lineHeight: 1.5, paddingLeft: 21,
                 }}>
-                  {item.status}
-                </span>
+                  {item.detail}
+                </div>
               </div>
             );
           })}
+
+          {/* Terminal cursor after last item */}
+          <div style={{ padding: "10px 0 4px", fontFamily: MONO, fontSize: 13, color: T.textDim }}>
+            <span style={{ opacity: 0.4 }}>❯ </span>
+            <span style={{ animation: "termBlink 1.1s step-end infinite", color: T.accent1 }}>▋</span>
+          </div>
         </div>
       </div>
-    </section>
+
+      <style>{`
+        @keyframes pulseExplore { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.5)} }
+        @keyframes termBlink    { 0%,100%{opacity:1} 50%{opacity:0} }
+      `}</style>
+    </section >
   );
 }
-
-
 
 /* ═══════════════════════════════════════════════
    ABOUT SECTION (DARK)
@@ -1799,11 +2384,17 @@ function Portfolio() {
       {/* ABOUT */}
       <AboutSection />
 
-      {/* EXPERIENCE */}
-      <ExperienceSection />
-
-      {/* EXPLORING */}
-      <ExploringSection />
+      {/* EXPERIENCE + EXPLORING — shared single GoL dot-matrix canvas */}
+      <div style={{ position: "relative", background: T.bg, overflow: "hidden" }}>
+        <ConwaysGameOfLife />
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1,
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px)",
+          opacity: isDark ? 0.35 : 0.2
+        }} />
+        <ExperienceSection />
+        <ExploringSection />
+      </div>
 
 
 
