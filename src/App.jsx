@@ -78,26 +78,26 @@ const NODE_COLORS = {
 const DEFAULT_COLOR = { r: 140, g: 130, b: 115, label: "#9a9080" };
 
 const NODE_DESCRIPTIONS = {
-  "Entanglement": "A fundamental quantum phenomenon where particles become correlated such that the physical state of one cannot be described independently of the rest.",
-  "Quantum Walk": "The quantum analog of a classical random walk. Uses coherent superposition of paths to provide quadratic or exponential superpolynomial algorithm speedups.",
-  "DTQW": "Discrete-Time Quantum Walks progress in sequential steps using a quantum coin operator to dictate superposition across a lattice, leading to non-classical distributions.",
-  "QuTiP": "The Quantum Toolbox in Python. A comprehensive open-source framework used widely by researchers for simulating the dynamics of open quantum systems under decoherence.",
-  "Cluster States": "Highly entangled, multi-qubit resource states essential for measurement-based quantum computation. Computation proceeds by sequential, adaptive single-qubit measurements on this pristine lattice.",
-  "Ising": "Mathematical models to simulate magnetic spin grids. Representing complex optimization problems as an Ising Hamiltonian allows mapping them onto physical annealing hardware.",
-  "SLM": "Spatial Light Modulators are dynamic liquid-crystal interfaces capable of spatially varying the phase, amplitude, or polarization of incident light, acting as programmable optics.",
-  "Photonics": "The physical science of light generation and manipulation. In advanced computing, photonics offers ultra-high bandwidth, minimal thermal dissipation, and massively parallel analog processing.",
-  "Interference": "The phenomenon where multiple coherent waves superimpose. In mathematical optical computing, carefully calibrated interference patterns instantly evaluate and compute complex analog correlations.",
-  "Cavity": "Resonant optical cavities confine light between reflective mirrors, forcing it to repeatedly traverse nonlinear mediums. Amplifies specific resonant frequencies and fosters tight light-matter interactions.",
-  "SHG": "Second Harmonic Generation is a nonlinear optical process where two interacting incident photons are effectively merged to form a single photon with exactly double the original frequency.",
-  "Modal Decomp.": "An analytical technique used to decompose complex transverse optical fields into a standardized basis of orthogonal modes, essential for precisely quantifying multimode spatial cross-talk.",
-  "Fourier Optics": "A paradigm mapping optical lens transformations to spatial Fourier transforms. It enables ultra-fast, entirely analog signal processing, filtering, and mathematical convolution seamlessly.",
-  "Optimization": "The computational pursuit of selecting the best element under specified constraints from a set of alternatives. Non-convex functions frequently represent NP-hard terrain complexities.",
-  "RL": "Reinforcement Learning is a machine learning paradigm teaching algorithmic agents to make optimal sequential decisions by taking actions in an environment to maximize cumulative rewards.",
-  "Algorithms": "Unambiguous sequences detailing how to solve rigorous computational problems. Advanced forms bridge deterministic classical logic boundaries with probabilistic, heuristic, or quantum-parallel techniques.",
-  "MEMS": "Microelectromechanical Systems are miniaturized structures built at the micron scale. They mechanically couple structural dynamics directly into electronic circuits to form highly sensitive sensors.",
-  "Acoustics": "The interdisciplinary physics defining generation, control, and propagation of mechanical waves across mediums. It is highly relevant to designing transducer membrane structural resonance.",
-  "FEM": "The Finite Element Method is a robust numerical technique for predicting how structures physically react to forces by discretizing complex geometries into manageable computational meshes.",
-  "Mechanics": "The foundational physical principles dealing with the macroscopic behavior of bodies subjected to forces, providing classical stress, strain, and elasticity characterization."
+  "Entanglement": "When quantum particles link up so deeply that you can't describe one without also describing the other.",
+  "Quantum Walk": "Like a standard random walk, but the walker can explore multiple paths at once, which helps algorithms run faster.",
+  "DTQW": "A type of quantum walk that moves in distinct steps, sort of like a clock ticking, to create unique path patterns.",
+  "QuTiP": "A Python library we use to simulate how quantum systems actually behave when exposed to noisy environments.",
+  "Cluster States": "Large grids of connected quantum states used as a blank canvas for certain types of quantum computing.",
+  "Ising": "A math model originally for magnets. We use it to map out complex real-world problems so physical hardware can solve them.",
+  "SLM": "Screens made of liquid crystals that let us shape and control a beam of light as if we were programming it.",
+  "Photonics": "Using light instead of electricity to process information, which keeps things moving incredibly fast and cool.",
+  "Interference": "What happens when waves overlap. We use these overlapping patterns of light to instantly run calculations.",
+  "Cavity": "Mirrors placed facing each other to trap light, forcing it to bounce back and forth to interact more strongly with whatever is inside.",
+  "SHG": "A process where two particles of light combine inside a special material to form a new one with twice the energy.",
+  "Modal Decomp.": "A technique to break down a messy beam of light into its simple, fundamental shapes so we can measure it accurately.",
+  "Fourier Optics": "Using physical lenses to perform math. It lets us process images and signals instantly using light.",
+  "Optimization": "The process of searching through a huge number of options to find the best possible solution to a problem.",
+  "RL": "A method of teaching software by trial and error, where the system learns to make good decisions by getting rewards for success.",
+  "Algorithms": "Clear, step-by-step instructions for solving problems. It's the logic behind how we get computers to do what we want.",
+  "MEMS": "Tiny mechanical devices built at a microscopic scale, often used to turn physical movement into electrical signals.",
+  "Acoustics": "The study of sound and vibration. Here, it helps us design materials that respond nicely to sound waves.",
+  "FEM": "A software method that breaks a complex shape into thousands of tiny blocks to see how the whole thing bends or reacts.",
+  "Mechanics": "The basic physics of how things move and handle loads, which tells us how a structure will actually behave under stress."
 };
 
 
@@ -1079,11 +1079,11 @@ function ProjectsSection() {
         }}>
           {/* LEFT */}
           <div style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
+            display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: isMobile ? "flex-start" : "center",
             padding: isMobile ? "80px 24px 20px 24px" : "96px 36px 60px 48px", position: "relative", zIndex: 5,
             height: isMobile ? "46%" : "auto"
           }}>
-            <div style={{ width: "100%", maxWidth: 520, height: isMobile ? "100%" : "auto", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div style={{ width: "100%", maxWidth: 520, height: isMobile ? "100%" : "auto", display: "flex", flexDirection: "column", justifyContent: isMobile ? "flex-start" : "center" }}>
               <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: isMobile ? 12 : 20 }}>
                 {project.tags.map((t) => (
                   <span key={t} style={{
@@ -1483,17 +1483,18 @@ function ConwaysGameOfLife() {
 function ExperienceSection() {
   const { isDark, T } = useContext(ThemeContext);
   const [hoveredIdx, setHoveredIdx] = useState(null);
+  const isMobile = useMediaQuery("(max-width: 850px)");
 
   return (
-    <section id="experience" style={{ padding: "100px 0", background: "transparent", position: "relative", overflow: "hidden" }}>
+    <section id="experience" style={{ padding: isMobile ? "60px 0" : "100px 0", background: "transparent", position: "relative", overflow: "hidden" }}>
 
-      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 48px", position: "relative", zIndex: 2 }}>
-        <div style={{ marginBottom: 60 }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "0 24px" : "0 48px", position: "relative", zIndex: 2 }}>
+        <div style={{ marginBottom: isMobile ? 40 : 60 }}>
           <SectionLabel n="03" label="Experience" />
           <SectionHeading>Where I've Worked</SectionHeading>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 16 : 24 }}>
           {EXPERIENCE.map((exp, i) => {
             const isHovered = hoveredIdx === i;
             return (
@@ -1503,9 +1504,9 @@ function ExperienceSection() {
                 onMouseLeave={() => setHoveredIdx(null)}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "180px 1fr",
-                  gap: 32,
-                  padding: "36px",
+                  gridTemplateColumns: isMobile ? "1fr" : "180px 1fr",
+                  gap: isMobile ? 16 : 32,
+                  padding: isMobile ? "24px" : "36px",
                   background: isDark
                     ? `rgba(28, 30, 36, ${isHovered ? 0.75 : 0.55})`
                     : `rgba(255, 255, 255, ${isHovered ? 0.9 : 0.6})`,
@@ -1520,34 +1521,55 @@ function ExperienceSection() {
                 }}
               >
                 {/* Left side: Dates */}
-                <div style={{
-                  fontFamily: MONO, fontSize: 13, color: isHovered ? exp.color : T.textDim,
-                  display: "flex", flexDirection: "column", gap: 6,
-                  paddingRight: 32, borderRight: `1px solid ${isHovered ? exp.color + "40" : T.border}`,
-                  transition: "all 0.4s"
-                }}>
-                  {exp.period.split("—").map((p, pIdx) => {
-                    const pt = p.trim();
-                    return (
-                      <span key={pIdx} style={{
-                        fontWeight: pt === "present" ? 600 : 400,
-                        opacity: pt === "present" ? 1 : 0.75
-                      }}>
-                        {pt}{pIdx === 0 && " —"}
-                      </span>
-                    );
-                  })}
-                </div>
+                {!isMobile && (
+                  <div style={{
+                    fontFamily: MONO, fontSize: 13, color: isHovered ? exp.color : T.textDim,
+                    display: "flex", flexDirection: "column", gap: 6,
+                    paddingRight: 32, borderRight: `1px solid ${isHovered ? exp.color + "40" : T.border}`,
+                    transition: "all 0.4s"
+                  }}>
+                    {exp.period.split("—").map((p, pIdx) => {
+                      const pt = p.trim();
+                      return (
+                        <span key={pIdx} style={{
+                          fontWeight: pt === "present" ? 600 : 400,
+                          opacity: pt === "present" ? 1 : 0.75
+                        }}>
+                          {pt}{pIdx === 0 && " —"}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* Right side: Content */}
                 <div>
+                  {isMobile && (
+                    <div style={{
+                      fontFamily: MONO, fontSize: 11, color: isHovered ? exp.color : T.textDim,
+                      marginBottom: 12, display: "flex", gap: 6, transition: "all 0.4s"
+                    }}>
+                      {exp.period.split("—").map((p, pIdx) => {
+                        const pt = p.trim();
+                        return (
+                          <span key={pIdx} style={{
+                            fontWeight: pt === "present" ? 600 : 400,
+                            opacity: pt === "present" ? 1 : 0.75
+                          }}>
+                            {pt}{pIdx === 0 && " —"}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+
                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
                     <div style={{
                       width: 8, height: 8, borderRadius: "50%", background: exp.color,
                       boxShadow: isHovered ? `0 0 12px ${exp.color}` : "none",
                       transition: "all 0.4s"
                     }} />
-                    <span style={{ fontSize: 20, fontFamily: SERIF, fontWeight: 600, color: T.text, lineHeight: 1.1 }}>
+                    <span style={{ fontSize: isMobile ? 18 : 20, fontFamily: SERIF, fontWeight: 600, color: T.text, lineHeight: 1.1 }}>
                       {exp.role}
                     </span>
                   </div>
@@ -1584,25 +1606,6 @@ function ExperienceSection() {
           })}
         </div>
       </div>
-
-      {/* Required for responsive grid layout without breaking cleanly */}
-      <style>{`
-        @media (max-width: 850px) {
-          #experience > div > div > div > div {
-             grid-template-columns: 1fr !important;
-             gap: 16px !important;
-             padding: 24px !important;
-          }
-          #experience > div > div > div > div > div:first-child {
-             border-right: none !important;
-             border-bottom: 1px solid var(--border) !important;
-             padding-right: 0 !important;
-             padding-bottom: 16px !important;
-             flex-direction: row !important;
-             align-items: center;
-          }
-        }
-      `}</style>
     </section>
   );
 }
