@@ -1081,9 +1081,9 @@ function ProjectsSection() {
           <div style={{
             display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: isMobile ? "flex-start" : "center",
             padding: isMobile ? "54px 24px 8px 24px" : "96px 36px 60px 48px", position: "relative", zIndex: 5,
-            height: isMobile ? "44%" : "auto"
+            height: "auto", flexShrink: isMobile ? 0 : 1
           }}>
-            <div style={{ width: "100%", maxWidth: 520, height: isMobile ? "100%" : "auto", display: "flex", flexDirection: "column", justifyContent: isMobile ? "flex-start" : "center" }}>
+            <div style={{ width: "100%", maxWidth: 520, height: "auto", display: "flex", flexDirection: "column", justifyContent: isMobile ? "flex-start" : "center" }}>
               <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: isMobile ? 10 : 20 }}>
                 {project.tags.map((t) => (
                   <span key={t} style={{
@@ -1171,7 +1171,7 @@ function ProjectsSection() {
           <div style={{
             padding: isMobile ? "4px 24px 24px 24px" : "96px 40px 60px 20px",
             display: "flex", alignItems: "center", position: "relative", zIndex: 5,
-            height: isMobile ? "56%" : "auto"
+            height: "auto", flex: isMobile ? 1 : "unset"
           }}>
             <div style={{
               position: "relative", width: "100%", height: "100%", minHeight: isMobile ? 0 : 400, zIndex: 1,
