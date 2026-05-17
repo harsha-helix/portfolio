@@ -1,0 +1,66 @@
+.container {
+  height: auto;
+  position: relative;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px);
+}
+
+.labelMobile {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 10;
+}
+
+.labelDesktop {
+  position: absolute;
+  top: 64px;
+  left: 48px;
+  z-index: 10;
+}
+
+.indicatorMobile {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.indicatorDesktop {
+  position: absolute;
+  top: 68px;
+  right: 48px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.projectGridMobile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.projectGridDesktop {
+  display: grid;
+  flex-direction: row;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+}
