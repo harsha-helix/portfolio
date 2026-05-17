@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { useAnimationFrame } from "../../hooks/useAnimationFrame";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { ThemeContext, SERIF } from "../../context/ThemeContext";
 import { GRAPH_NODES, GRAPH_EDGES, NODE_COLORS, DEFAULT_COLOR, NODE_DESCRIPTIONS } from "../../data/constants";
 
@@ -10,6 +11,7 @@ export default function GraphCanvas({ activeNodes, fullColor = false, dark = tru
   const activeRef = useRef(activeNodes);
   useEffect(() => { activeRef.current = activeNodes; }, [activeNodes]);
 
+  const isMobile = useMediaQuery("(max-width: 850px)");
   const [hoveredNode, setHoveredNode] = useState(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
@@ -27,6 +29,24 @@ export default function GraphCanvas({ activeNodes, fullColor = false, dark = tru
   );
 
   const dragState = useRef({ activeNode: null });
+
+  useEffect(() => {
+    nodesRef.current.forEach(n => {
+      if (!n.isDragged) {
+        n.origin_x = isMobile && n.mx !== undefined ? n.mx : n.x;
+        n.origin_y = isMobile && n.my !== undefined ? n.my : n.y;
+      }
+    });
+  }, [isMobile]);
+
+  useEffect(() => {
+    nodesRef.current.forEach(n => {
+      if (!n.isDragged) {
+        n.origin_x = isMobile && n.mx !== undefined ? n.mx : n.x;
+        n.origin_y = isMobile && n.my !== undefined ? n.my : n.y;
+      }
+    });
+  }, [isMobile]);
 
   useAnimationFrame((dt) => {
     const canvas = canvasRef.current;
@@ -248,4 +268,4 @@ export default function GraphCanvas({ activeNodes, fullColor = false, dark = tru
       )}
     </div>
   );
-}
+}

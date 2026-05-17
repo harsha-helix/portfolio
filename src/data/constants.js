@@ -96,25 +96,25 @@ export const NODE_DESCRIPTIONS = {
 
 
 export const GRAPH_NODES = [
-  { id: "Optimization", x: 0.50, y: 0.30 },
-  { id: "Quantum Walk", x: 0.22, y: 0.52 },
-  { id: "DTQW", x: 0.13, y: 0.33 },
-  { id: "RL", x: 0.36, y: 0.68 },
-  { id: "Ising", x: 0.68, y: 0.18 },
-  { id: "SLM", x: 0.80, y: 0.42 },
-  { id: "Interference", x: 0.63, y: 0.52 },
-  { id: "Photonics", x: 0.55, y: 0.72 },
-  { id: "Modal Decomp.", x: 0.84, y: 0.68 },
-  { id: "Cavity", x: 0.74, y: 0.82 },
-  { id: "SHG", x: 0.88, y: 0.28 },
-  { id: "MEMS", x: 0.18, y: 0.78 },
-  { id: "Acoustics", x: 0.08, y: 0.64 },
-  { id: "FEM", x: 0.06, y: 0.44 },
-  { id: "Mechanics", x: 0.13, y: 0.18 },
-  { id: "QuTiP", x: 0.44, y: 0.12 },
-  { id: "Cluster States", x: 0.28, y: 0.18 },
-  { id: "Entanglement", x: 0.40, y: 0.44 },
-  { id: "Fourier Optics", x: 0.68, y: 0.60 },
+  { id: "Optimization", x: 0.50, y: 0.30, mx: 0.50, my: 0.45 },
+  { id: "Quantum Walk", x: 0.22, y: 0.52, mx: 0.25, my: 0.22 },
+  { id: "DTQW", x: 0.13, y: 0.33, mx: 0.75, my: 0.22 },
+  { id: "RL", x: 0.36, y: 0.68, mx: 0.25, my: 0.40 },
+  { id: "Ising", x: 0.68, y: 0.18, mx: 0.50, my: 0.35 },
+  { id: "SLM", x: 0.80, y: 0.42, mx: 0.50, my: 0.58 },
+  { id: "Interference", x: 0.63, y: 0.52, mx: 0.25, my: 0.65 },
+  { id: "Photonics", x: 0.55, y: 0.72, mx: 0.50, my: 0.72 },
+  { id: "Modal Decomp.", x: 0.84, y: 0.68, mx: 0.75, my: 0.65 },
+  { id: "Cavity", x: 0.74, y: 0.82, mx: 0.25, my: 0.58 },
+  { id: "SHG", x: 0.88, y: 0.28, mx: 0.75, my: 0.58 },
+  { id: "MEMS", x: 0.18, y: 0.78, mx: 0.50, my: 0.82 },
+  { id: "Acoustics", x: 0.08, y: 0.64, mx: 0.25, my: 0.88 },
+  { id: "FEM", x: 0.06, y: 0.44, mx: 0.75, my: 0.88 },
+  { id: "Mechanics", x: 0.13, y: 0.18, mx: 0.50, my: 0.95 },
+  { id: "QuTiP", x: 0.44, y: 0.12, mx: 0.30, my: 0.08 },
+  { id: "Cluster States", x: 0.28, y: 0.18, mx: 0.70, my: 0.08 },
+  { id: "Entanglement", x: 0.40, y: 0.44, mx: 0.50, my: 0.15 },
+  { id: "Fourier Optics", x: 0.68, y: 0.60, mx: 0.50, my: 0.65 },
 ];
 
 export const GRAPH_EDGES = [
@@ -207,4 +207,4 @@ export const FRAGMENTS = [
   { kind: "sketch", content: "phase-space portrait of a driven nonlinear oscillator", coord: "x vs ẋ" },
   { kind: "note", content: "Boltzmann weight: e^{-ΔE/kT} — simulated annealing mimics cooling", coord: "stat. mech." },
   { kind: "ref", content: "Aharonov et al. 1993 — coined quantum walk on the line", coord: "PRL 70, 1975" },
-];
+];
