@@ -9,7 +9,7 @@ export default function CVButton() {
     setTimeout(() => setDownloading(false), 1800);
     // In production, replace with real CV URL
     const a = document.createElement("a");
-    a.href = "#";
+    a.href = "https://drive.google.com/file/d/1JBrWB1ELq5YHuPo3VUvTyZGb2FQ5h8Pw/view?usp=sharing";
     a.download = "Harshavardhan_Hajeri_CV.pdf";
     a.click();
   };
@@ -26,4 +26,4 @@ export default function CVButton() {
       {downloading ? "preparing..." : "Download CV"}
     </button>
   );
-}
+}
