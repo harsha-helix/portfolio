@@ -7,6 +7,10 @@ export const PROJECTS = [
     tools: ["Python", "SLM", "Fourier Optics", "MATLAB"],
     annotation: "EOP 2025 — with G. Patil, A. Prabhakar",
     nodes: ["Ising", "Optimization", "SLM", "Interference", "Fourier Optics"],
+    links: [
+      { label: "GitHub", url: "https://github.com/harsha-helix/compact-slim/tree/main" },
+      { label: "Paper", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
+    ],
   },
   {
     id: 2,
@@ -16,6 +20,9 @@ export const PROJECTS = [
     tools: ["SLM", "Python", "LabVIEW", "Fourier Optics"],
     annotation: "IIT Madras — Prof. Anil Prabhakar",
     nodes: ["Modal Decomp.", "SLM", "Cavity", "Photonics", "Fourier Optics"],
+    links: [
+      { label: "Poster", url: "https://drive.google.com/file/d/1EGqSlBdWkEB1R82V8vhrMK9nfC9guyub/view?usp=drive_link" }
+    ],
   },
   {
     id: 3,
@@ -25,6 +32,9 @@ export const PROJECTS = [
     tools: ["Qiskit", "Python", "PyPI"],
     annotation: "Released as qtsit on PyPI — Qugain Quantum",
     nodes: ["DTQW", "Quantum Walk", "RL", "Optimization", "Entanglement"],
+    links: [
+      { label: "GitHub", url: "https://github.com/harsha-helix/qtsit/blob/main/qtsit/algorithms/MAB_QW.py" }
+    ],
   },
   {
     id: 4,
@@ -187,12 +197,15 @@ export const EXPERIENCE = [
     color: "#d4880a",
   },
   {
-    role: "Quantum Computing Lead",
-    org: "Google Developer Student Club, BITS Goa",
-    period: "Aug 2023 – May 2025",
+    role: "BITS Pilani, Goa",
+    org: "Teaching, Outreach & Campus Life",
+    period: "Oct 2021 – June 2026",
+    advisor: null,
     points: [
-      "Led workshops and study groups reaching 100+ students",
-      "Organized IBM-sponsored Qiskit Fall Fest 2023; received the 2024 Qiskit Fall Fest Mentor Badge",
+      "Teaching Assistant, Quantum Information & Computation (BITS-F386) under Dr. Radhika Vathsan — designed and graded assignments for 50 students, created Qiskit-based tutorials",
+      "Mentor for Quark STP and CTE — taught Grover's Algorithm and Special Relativity to 150+ students using Manim-based materials",
+      "Quantum Computing Lead, Google Developer Student Club — organized IBM-sponsored Qiskit Fall Fest 2023; received 2024 Qiskit Fall Fest Mentor Badge",
+      "Core Member, Mime Club BITS Goa, made and performed two fun performances every year",
     ],
     color: "#c84040",
   },

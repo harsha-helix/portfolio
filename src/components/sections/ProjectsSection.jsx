@@ -127,7 +127,7 @@ export default function ProjectsSection() {
                   <span style={{ opacity: 0.5 }}>↳</span>{project.annotation}
                 </div>
                 <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
-                  {[["GitHub", "#"], ["Paper", "#"]].map(([l, h]) => (
+                  {(project.links || []).map(({ label: l, url: h }) => (
                     <a key={l} href={h} style={{
                       fontFamily: MONO, fontSize: 10.5, color: T.textMid,
                       border: `0.5px solid ${T.border}`, borderRadius: 4, padding: "7px 18px",
