@@ -54,7 +54,7 @@ function Portfolio() {
         transition: "all 0.4s ease"
       }}>
         <span style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, letterSpacing: "0.12em" }}>
-          HH — 2025
+          HH — 2026
         </span>
         <div style={{ display: "flex", gap: isMobile ? 12 : 30, alignItems: "center", position: "relative" }}>
           <button onClick={toggleTheme} title="Toggle Theme" style={{ background: "transparent", border: "none", cursor: "pointer", color: T.textDim, transition: "color 0.2s", display: "flex", alignItems: "center", padding: "6px" }} onMouseEnter={e => e.currentTarget.style.color = T.text} onMouseLeave={e => e.currentTarget.style.color = T.textDim}>
@@ -164,21 +164,19 @@ function Portfolio() {
                 fontSize: "clamp(30px,4vw,52px)", fontWeight: 600, lineHeight: 1.2,
                 color: T.text, margin: "0 0 22px", letterSpacing: "-0.02em"
               }}>
-                Building at the edge of{" "}
-                <em style={{ fontStyle: "italic", color: T.accent1 }}>physical</em>{" "}
-                and{" "}
-                <em style={{ fontStyle: "italic", color: T.accent3 }}>computational</em>{" "}
-                systems.
+                Fascinated by how{" "}
+                <em style={{ fontStyle: "italic", color: T.accent1 }}>physics</em>{" "}
+                can shape{" "}
+                <em style={{ fontStyle: "italic", color: T.accent3 }}>computation</em>.
               </h1>
               <p style={{ fontSize: 16, color: T.textMid, lineHeight: 1.75, margin: "0 0 32px" }}>
-                Quantum optics, photonic computing, quantum algorithms —
-                experiments that become instruments.
+                I spend my time exploring quantum optics, analog optical computing, and the unexpected ways we can process information.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 {[
                   { label: "GitHub ↗", href: "https://github.com/harsha-helix" },
                   { label: "LinkedIn   ↗", href: "https://www.linkedin.com/in/harshavardhan-hajeri-01b279254/" },
-                  { label: "Contact", href: "mailto:f20212402@goa.bits-pilani.ac.in" },
+                  { label: "Contact", href: "mailto:tau.harsha@gmail.com" },
                 ].map((l) => (
                   <a key={l.label} href={l.href}
                     style={{
@@ -247,7 +245,7 @@ function Portfolio() {
         background: T.bg2
       }}>
         <span style={{ fontFamily: MONO, fontSize: 10, color: T.textDim }}>
-          Harshavardhan Hajeri · BITS Pilani · 2025
+          Harshavardhan Hajeri · BITS Pilani · 2026
         </span>
         <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
           {[T.accent1, T.accent3, T.accent2, T.accent4].map((c, i) => (
@@ -257,7 +255,7 @@ function Portfolio() {
             }} />
           ))}
           <span style={{ fontFamily: MONO, fontSize: 10, color: T.textDim, marginLeft: 8 }}>
-            f20212402@goa.bits-pilani.ac.in
+            tau.harsha@gmail.com
           </span>
         </div>
       </footer>

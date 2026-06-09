@@ -36,25 +36,25 @@ export default function AboutSection() {
               M.Sc. Physics · B.E. Mechanical Engineering · BITS Pilani
             </p>
             <p style={{ fontSize: 16, color: T.textMid, lineHeight: 1.85, margin: "0 0 20px", fontFamily: SERIF }}>
-              I build at the intersection of quantum optics, photonic computing, and quantum algorithms.
-              Currently researching at IIT Madras under Prof. Anil Prabhakar — spatial light modulators,
-              nonlinear cavities, and analog optical computation.
+              I've always been drawn to the idea of using the physical world to process information differently.
+              Currently, I'm learning and researching at IIT Madras under Prof. Anil Prabhakar,
+              where I get to work hands-on with spatial light modulators and nonlinear cavities to explore analog optical computation.
             </p>
             <p style={{ fontSize: 16, color: T.textMid, lineHeight: 1.85, margin: "0 0 20px", fontFamily: SERIF }}>
-              Co-founder of Qugain Quantum Technologies, where we released{" "}
-              <span style={{ fontFamily: MONO, fontSize: 14, color: T.accent1 }}>qtsit</span> — discrete-time
-              quantum walk implementations applied to reinforcement learning problems.
+              Earlier on, I co-founded Qugain Quantum Technologies—an incredible experience that pushed me to learn rapidly.
+              There, we built{" "}
+              <span style={{ fontFamily: MONO, fontSize: 14, color: T.accent1 }}>qtsit</span> to explore how discrete-time
+              quantum walks could be applied to reinforcement learning problems.
             </p>
             <p style={{ fontSize: 15, color: "#70706a", lineHeight: 1.8, margin: "0 0 36px", fontFamily: SERIF }}>
-              I'm interested in systems where physics is not just the substrate but the computation.
-              Interference patterns as optimization. Walks as search. Cavities as signal processors.
-              The boundary is interesting.
+              What really excites me are systems where physics is intimately tied to the computation itself. 
+              The idea that we can use interference patterns to solve problems, or optical cavities to process signals, 
+              feels incredibly elegant to me. There's so much to learn at this boundary, and I'm eager to keep exploring it.
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               {[
-                { label: "Email", href: "mailto:f20212402@goa.bits-pilani.ac.in", note: "contact" },
+                { label: "Email", href: "mailto:tau.harsha@gmail.com", note: "contact" },
                 { label: "GitHub ↗", href: "https://github.com/harsha-helix", note: "open source" },
-                
               ].map(({ label, href, note }) => (
                 <a key={label} href={href} style={{
                   fontFamily: MONO, fontSize: 10.5, color: T.textMid,
@@ -128,4 +128,4 @@ export default function AboutSection() {
       </div>
     </section>
   );
-}
+}

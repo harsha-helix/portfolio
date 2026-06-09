@@ -1,14 +1,14 @@
 import { createContext } from "react";
 
-export const MONO = "'IBM Plex Mono', monospace";
-export const SERIF = "'Spectral', 'Georgia', serif";
+export const MONO = "'JetBrains Mono', monospace";
+export const SERIF = "'Inter', sans-serif";
 
 export const D = {
-    bg: "#1a1c21",
-    bg2: "#21242a",
-    bg3: "#272b33",
-    surface: "#2d323c",
-    surfaceHi: "#363c48",
+    bg: "#282a32",
+    bg2: "#32353e",
+    bg3: "#3c404a",
+    surface: "#424652",
+    surfaceHi: "#4f5462",
     border: "rgba(255,255,255,0.12)",
     borderMed: "rgba(255,255,255,0.18)",
     borderHi: "rgba(255,255,255,0.26)",
