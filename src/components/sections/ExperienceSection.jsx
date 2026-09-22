@@ -15,8 +15,8 @@ export default function ExperienceSection() {
 
       <div style={{ maxWidth: 1080, margin: "0 auto", padding: isMobile ? "0 24px" : "0 48px", position: "relative", zIndex: 2 }}>
         <div style={{ marginBottom: isMobile ? 40 : 60 }}>
-          <SectionLabel n="03" label="Experience" />
-          <SectionHeading>Where I've Worked</SectionHeading>
+          <SectionLabel n="02" label="Experience" />
+          <SectionHeading>Experience &amp; Education</SectionHeading>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 16 : 24 }}>
@@ -100,7 +100,7 @@ export default function ExperienceSection() {
                   </div>
 
                   <div style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, marginBottom: 20, letterSpacing: "0.02em" }}>
-                    // {exp.org}
+                    {exp.org}
                   </div>
 
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -121,7 +121,7 @@ export default function ExperienceSection() {
                   {exp.advisor && (
                     <div style={{ marginTop: 24, display: "inline-block", background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)", padding: "6px 12px", borderRadius: 6 }}>
                       <span style={{ fontSize: 11, color: T.textDim, fontFamily: MONO }}>
-                        advisor // <span style={{ color: T.text }}>{exp.advisor}</span>
+                        Advisor: <span style={{ color: T.text }}>{exp.advisor}</span>
                       </span>
                     </div>
                   )}
@@ -133,4 +133,4 @@ export default function ExperienceSection() {
       </div>
     </section>
   );
-}
+}

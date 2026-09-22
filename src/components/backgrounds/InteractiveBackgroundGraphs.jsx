@@ -4,9 +4,14 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useAnimationFrame } from "../../hooks/useAnimationFrame";
 
 export default function InteractiveBackgroundGraphs() {
-  const { isDark, T } = useContext(ThemeContext);
   const isMobile = useMediaQuery("(max-width: 850px)");
-  if (isMobile) return null; // Save CPU on mobile!
+  // Save CPU on mobile. The early return lives in this wrapper so the canvas
+  // component's hooks always run in the same order when crossing the breakpoint.
+  return isMobile ? null : <BackgroundGraphCanvas />;
+}
+
+function BackgroundGraphCanvas() {
+  const { isDark, T } = useContext(ThemeContext);
   const canvasRef = useRef(null);
 
   // Track mouse and nodes over time

@@ -159,7 +159,11 @@ export default function GraphCanvas({ activeNodes, fullColor = false, dark = tru
           : dark
             ? (isHighlighted ? "rgba(200,210,255,0.95)" : "rgba(120,130,160,0.55)")
             : (isHighlighted ? "rgba(42,54,100,0.95)" : "rgba(100,95,82,0.55)");
-        ctx.fillText(n.id, n.x * W + (r + pulse + 4), n.y * H + 4);
+        // Flip the label to the left of the node when it would overflow the right edge
+        const gap = r + pulse + 4;
+        const textW = ctx.measureText(n.id).width;
+        const lx = n.x * W + gap + textW > W - 6 ? n.x * W - gap - textW : n.x * W + gap;
+        ctx.fillText(n.id, lx, n.y * H + 4);
         ctx.globalAlpha = 1.0;
       }
 

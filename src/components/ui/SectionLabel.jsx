@@ -8,7 +8,7 @@ export default function SectionLabel({ n, label }) {
             fontFamily: MONO, fontSize: 10, color: T.textDim, letterSpacing: "0.18em",
             textTransform: "uppercase", display: "block", marginBottom: 12
         }}>
-            § {n} — {label}
+            {n} — {label}
         </span>
     );
 }

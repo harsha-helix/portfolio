@@ -5,14 +5,21 @@ import { useMediaQuery } from "./hooks/useMediaQuery";
 import DotGrid from "./components/ui/DotGrid";
 import HeroTraces from "./components/hero/HeroTraces";
 import HeroPicture from "./components/hero/HeroPicture";
-import MiniTerminal from "./components/hero/MiniTerminal";
 import CVButton from "./components/ui/CVButton";
 import ProjectsSection from "./components/sections/ProjectsSection";
-import ConceptField from "./components/sections/ConceptField";
 import AboutSection from "./components/sections/AboutSection";
 import ConwaysGameOfLife from "./components/backgrounds/ConwaysGameOfLife";
 import ExperienceSection from "./components/sections/ExperienceSection";
 import ExploringSection from "./components/sections/ExploringSection";
+import PresentationsSection from "./components/sections/PresentationsSection";
+import SkillsSection from "./components/sections/SkillsSection";
+import ContactSection from "./components/sections/ContactSection";
+import { LINKS } from "./data/constants";
+
+const NAV = [
+  ["research", "#research"], ["experience", "#experience"], ["presentations", "#presentations"],
+  ["skills", "#skills"], ["interests", "#interests"], ["about", "#about"], ["contact", "#contact"],
+];
 
 export default function AppWrapper() {
   const [isDark, setIsDark] = useState(true);
@@ -54,9 +61,9 @@ function Portfolio() {
         transition: "all 0.4s ease"
       }}>
         <span style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, letterSpacing: "0.12em" }}>
-          HH — 2026
+          H. Hajeri
         </span>
-        <div style={{ display: "flex", gap: isMobile ? 12 : 30, alignItems: "center", position: "relative" }}>
+        <div style={{ display: "flex", gap: isMobile ? 12 : 22, alignItems: "center", position: "relative" }}>
           <button onClick={toggleTheme} title="Toggle Theme" style={{ background: "transparent", border: "none", cursor: "pointer", color: T.textDim, transition: "color 0.2s", display: "flex", alignItems: "center", padding: "6px" }} onMouseEnter={e => e.currentTarget.style.color = T.text} onMouseLeave={e => e.currentTarget.style.color = T.textDim}>
             {isDark ? (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -77,9 +84,7 @@ function Portfolio() {
             )}
           </button>
           {!isMobile ? (
-            [["work", "#work"], ["field", "#field"], ["experience", "#experience"],
-            ["exploring", "#exploring"], ["about", "#about"]]
-              .map(([s, h]) => (
+            NAV.map(([s, h]) => (
                 <a key={s} href={h} style={{
                   fontFamily: MONO, fontSize: 10.5, color: T.textDim,
                   textDecoration: "none", letterSpacing: "0.08em",
@@ -108,7 +113,7 @@ function Portfolio() {
               boxShadow: isDark ? "0 10px 40px rgba(0,0,0,0.4)" : "0 10px 40px rgba(0,0,0,0.1)",
               backdropFilter: "blur(16px)", zIndex: 200
             }}>
-              {[["work", "#work"], ["experience", "#experience"], ["exploring", "#exploring"], ["about", "#about"]].map(([s, h]) => (
+              {NAV.map(([s, h]) => (
                 <a key={s} href={h} onClick={() => setMenuOpen(false)} style={{
                   padding: "12px 20px", fontFamily: MONO, fontSize: 11, color: T.textDim, textDecoration: "none", letterSpacing: "0.08em"
                 }}>
@@ -158,27 +163,30 @@ function Portfolio() {
                 fontFamily: MONO, fontSize: 10, color: T.textDim,
                 letterSpacing: "0.18em", marginBottom: 20, textTransform: "uppercase"
               }}>
-                M.Sc. Physics · B.E. Mech. Eng · BITS Pilani
+                Research Staff · IIT Madras
               </div>
               <h1 style={{
-                fontSize: "clamp(30px,4vw,52px)", fontWeight: 600, lineHeight: 1.2,
-                color: T.text, margin: "0 0 22px", letterSpacing: "-0.02em"
+                fontSize: "clamp(32px,4.4vw,56px)", fontWeight: 600, lineHeight: 1.15,
+                color: T.text, margin: "0 0 18px", letterSpacing: "-0.02em"
               }}>
-                Fascinated by how{" "}
-                <em style={{ fontStyle: "italic", color: T.accent1 }}>physics</em>{" "}
-                can shape{" "}
-                <em style={{ fontStyle: "italic", color: T.accent3 }}>computation</em>.
+                Harshavardhan Hajeri
               </h1>
-              <p style={{ fontSize: 16, color: T.textMid, lineHeight: 1.75, margin: "0 0 32px" }}>
-                I spend my time exploring quantum optics, analog optical computing, and the unexpected ways we can process information.
+              <p style={{ fontSize: 17, color: T.textMid, lineHeight: 1.7, margin: "0 0 14px", maxWidth: 560 }}>
+                Experimental quantum optics: I build and control optical hardware, from locked cavities and{" "}
+                <em style={{ fontStyle: "normal", color: T.accent3 }}>second-harmonic generation</em> to spatial light
+                modulators that <em style={{ fontStyle: "normal", color: T.accent1 }}>compute with interference</em>.
+              </p>
+              <p style={{ fontFamily: MONO, fontSize: 11, color: T.textDim, letterSpacing: "0.04em", lineHeight: 1.7, margin: "0 0 30px" }}>
+                Applying to PhD programs for Fall 2027 · open to research roles in quantum photonics
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 {[
-                  { label: "GitHub ↗", href: "https://github.com/harsha-helix" },
-                  { label: "LinkedIn   ↗", href: "https://www.linkedin.com/in/harsha-tau/" },
-                  { label: "Contact", href: "mailto:tau.harsha@gmail.com" },
+                  { label: "GitHub ↗", href: LINKS.github },
+                  { label: "LinkedIn ↗", href: LINKS.linkedin },
+                  { label: "Email", href: `mailto:${LINKS.email}` },
                 ].map((l) => (
                   <a key={l.label} href={l.href}
+                    target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
                     style={{
                       fontFamily: MONO, fontSize: 10.5, color: T.textMid,
                       border: `0.5px solid ${T.border}`, borderRadius: 4, padding: "8px 18px",
@@ -194,13 +202,6 @@ function Portfolio() {
               </div>
             </div>
           </div>
-
-          {/* terminal */}
-          {!isMobile && (
-            <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-              <MiniTerminal />
-            </div>
-          )}
         </div>
 
         <div style={{
@@ -213,18 +214,12 @@ function Portfolio() {
         <style>{`@keyframes fadeOsc{0%,100%{opacity:0.25}50%{opacity:0.75}}`}</style>
       </section>
 
-      {/* PROJECTS */}
-      <div id="work">
+      {/* RESEARCH PROJECTS */}
+      <div id="research">
         <ProjectsSection />
       </div>
 
-      {/* CONCEPT FIELD */}
-      <ConceptField />
-
-      {/* ABOUT */}
-      <AboutSection />
-
-      {/* EXPERIENCE + EXPLORING — shared single GoL dot-matrix canvas */}
+      {/* EXPERIENCE → INTERESTS — shared single GoL dot-matrix canvas */}
       <div style={{ position: "relative", background: T.bg, overflow: "hidden" }}>
         <ConwaysGameOfLife />
         <div style={{
@@ -233,8 +228,14 @@ function Portfolio() {
           opacity: isDark ? 0.35 : 0.2
         }} />
         <ExperienceSection />
-        <ExploringSection />
+        <PresentationsSection />
+        <SkillsSection />
+        <div id="interests"><ExploringSection /></div>
       </div>
+
+      {/* ABOUT + CONTACT */}
+      <AboutSection />
+      <ContactSection />
 
 
 
@@ -245,7 +246,7 @@ function Portfolio() {
         background: T.bg2
       }}>
         <span style={{ fontFamily: MONO, fontSize: 10, color: T.textDim }}>
-          Harshavardhan Hajeri · BITS Pilani · 2026
+          Harshavardhan Hajeri · IIT Madras · 2026
         </span>
         <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
           {[T.accent1, T.accent3, T.accent2, T.accent4].map((c, i) => (
@@ -255,7 +256,7 @@ function Portfolio() {
             }} />
           ))}
           <span style={{ fontFamily: MONO, fontSize: 10, color: T.textDim, marginLeft: 8 }}>
-            tau.harsha@gmail.com
+            {LINKS.email}
           </span>
         </div>
       </footer>

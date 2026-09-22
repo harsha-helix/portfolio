@@ -5,11 +5,11 @@ export const PROJECTS = [
     description: "Solving NP-hard optimization problems via analog optical interference. A phase-only SLM encodes spin configurations; Fourier optics computes the cost function; a Metropolis feedback loop drives convergence.",
     tags: ["Quantum Optics", "Optimization", "Photonics"],
     tools: ["Python", "SLM", "Fourier Optics", "MATLAB"],
-    annotation: "EOP 2025 — with G. Patil, A. Prabhakar",
+    annotation: "IIT Madras · presented at EOP 2025",
     nodes: ["Ising", "Optimization", "SLM", "Interference", "Fourier Optics"],
     links: [
       { label: "GitHub", url: "https://github.com/harsha-helix/compact-slim/tree/main" },
-      { label: "Paper", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
+      { label: "Poster", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
     ],
   },
   {
@@ -18,7 +18,7 @@ export const PROJECTS = [
     description: "SLM-based framework for decomposing cavity SHG fields. Digital knife-edge alignment and crosstalk matrix calibration improved average modal self-overlap from 0.86 → 0.96 (fundamental mode: 0.996).",
     tags: ["Nonlinear Optics", "Holography", "SHG"],
     tools: ["SLM", "Python", "LabVIEW", "Fourier Optics"],
-    annotation: "IIT Madras — Prof. Anil Prabhakar",
+    annotation: "IIT Madras · presented at EOP 2025",
     nodes: ["Modal Decomp.", "SLM", "Cavity", "Photonics", "Fourier Optics"],
     links: [
       { label: "Poster", url: "https://drive.google.com/file/d/1EGqSlBdWkEB1R82V8vhrMK9nfC9guyub/view?usp=drive_link" }
@@ -30,16 +30,16 @@ export const PROJECTS = [
     description: "Aligned and locked two optical cavities: a triangular mode cleaner at 1064 nm and a bow-tie SHG cavity with a PPLN crystal converting 1064 → 532 nm, with 99% mode matching. Pound-Drever-Hall error signals feed a Red Pitaya lock-in/PID loop, which drives the cavity PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz bandwidth, up to 200 mA into the capacitive piezo) for stable lock acquisition.",
     tags: ["Optical Cavities", "Feedback Control", "SHG"],
     tools: ["Red Pitaya", "PDH", "PID", "HV Amplifier", "PPLN"],
-    annotation: "IIT Madras — Prof. Anil Prabhakar",
+    annotation: "IIT Madras · Prof. Anil Prabhakar",
     nodes: ["Cavity", "PDH Lock", "Mode Cleaner", "SHG", "Photonics"],
   },
   {
     id: 3,
     title: "Discrete-Time Quantum Walk",
-    description: "Coined and split-step DTQW circuits implemented on Qiskit for RL-based optimization. Demonstrated measurable advantage over classical random walk baselines on the N-Armed Bandit problem.",
+    description: "Implemented coined and split-step discrete-time quantum walk circuits in Qiskit for state preparation and RL-based optimization, and showed an advantage over classical random-walk baselines on the N-Armed Bandit problem.",
     tags: ["Quantum Computing", "RL", "Optimization"],
     tools: ["Qiskit", "Python", "PyPI"],
-    annotation: "Released as qtsit on PyPI — Qugain Quantum",
+    annotation: "Qugain Quantum Technologies · released in qtsit (PyPI)",
     nodes: ["DTQW", "Quantum Walk", "RL", "Optimization", "Entanglement"],
     links: [
       { label: "GitHub", url: "https://github.com/harsha-helix/qtsit/blob/main/qtsit/algorithms/MAB_QW.py" }
@@ -47,20 +47,20 @@ export const PROJECTS = [
   },
   {
     id: 4,
-    title: "Cluster State Generation",
-    description: "Theoretical and computational study of photonic cluster states as resources for measurement-based quantum computation. Designed linear-optical circuits for heralded entanglement generation using QuTiP simulations.",
-    tags: ["Quantum Information", "MBQC", "Photonics"],
-    tools: ["QuTiP", "Python", "Qiskit"],
-    annotation: "Qugain Quantum Technologies — internal R&D",
-    nodes: ["Cluster States", "Entanglement", "QuTiP", "Photonics", "Quantum Walk"],
+    title: "Entanglement in Cluster States",
+    description: "Simulated 2D continuous-variable cluster states and computed entanglement measures on photon-subtracted squeezed vacuum states.",
+    tags: ["CV Quantum Optics", "Entanglement", "Cluster States"],
+    tools: ["Strawberry Fields", "Python"],
+    annotation: "BITS Goa · Dr. Sanjib Dey",
+    nodes: ["Cluster States", "Entanglement", "Photonics"],
   },
   {
     id: 5,
     title: "MEMS Microphone Simulation",
     description: "Structural-acoustic coupled FEM simulation of a capacitive MEMS microphone in COMSOL. Proposed design modifications that improved simulated sensitivity through geometry optimization.",
     tags: ["MEMS", "Acoustics", "FEM"],
-    tools: ["COMSOL", "Fusion 360", "MATLAB"],
-    annotation: "Under Dr. D. G. Patil, BITS Goa",
+    tools: ["COMSOL Multiphysics"],
+    annotation: "BITS Goa · Dr. D. G. Patil",
     nodes: ["MEMS", "Acoustics", "FEM", "Mechanics"],
   },
 ];
@@ -162,20 +162,10 @@ export const GRAPH_EDGES = [
 ];
 
 export const EXPLORING = [
-  { label: "open quantum systems", detail: "QuTiP — Lindblad master equations, decoherence landscapes", status: "active" },
-  { label: "photonic computing", detail: "SLM-based analog solvers beyond Ising — continuous optimization", status: "active" },
-  { label: "variational quantum algorithms", detail: "QAOA geometry on near-term hardware", status: "reading" },
-  { label: "modal crosstalk in cavities", detail: "Extending holographic alignment to higher-order modes", status: "ongoing" },
-  { label: "quantum walks on graphs", detail: "Spectral graph theory → walk dynamics correspondence", status: "reading" },
-  { label: "topological photonics", detail: "Edge states and band topology in photonic lattices", status: "new" },
+  { label: "Quantum sensing with squeezed light", detail: "Generating squeezed states of light in optical cavities, building on SHG and cavity locking, to push measurement sensitivity below the shot-noise limit" },
+  { label: "Structured light & its applications", detail: "Shaping amplitude, phase, and spatial modes of light with SLMs, including optical control of cold atoms and trapped ions" },
+  { label: "Photonic & analog optical computing", detail: "Optical processors and complex networks that use a physical medium to compute, from spatial photonic Ising machines to broader analog solvers" },
 ];
-
-export const STATUS_COLORS_DARK = {
-  active: { bg: "rgba(32,192,168,0.12)", border: "rgba(32,192,168,0.3)", text: "#40d8b8" },
-  reading: { bg: "rgba(108,92,231,0.12)", border: "rgba(108,92,231,0.3)", text: "#a898f0" },
-  ongoing: { bg: "rgba(224,168,48,0.12)", border: "rgba(224,168,48,0.3)", text: "#e0c050" },
-  new: { bg: "rgba(200,80,200,0.12)", border: "rgba(200,80,200,0.3)", text: "#d880d8" },
-};
 
 export const EXPERIENCE = [
   {
@@ -187,43 +177,42 @@ export const EXPERIENCE = [
       "Built a Spatial Photonic Ising Machine using a phase-only SLM and Fourier optics to solve NP-hard optimization problems via analog interference, with a Metropolis simulated annealing feedback loop and Gaussian beam compensation",
       "Developed an SLM-based holographic modal decomposition framework for a bow-tie SHG cavity; introduced a digital knife-edge alignment technique and crosstalk matrix calibration, improving average modal self-overlap from 0.86 → 0.96 (fundamental mode: 0.996)",
       "Aligned and implemented Pound-Drever-Hall (PDH) locking for a bow-tie SHG cavity (PPLN, 1064 → 532 nm) and a triangular mode-cleaner cavity, using a Red Pitaya-based lock-in/PID controller driving a PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz, up to 200 mA)",
-      "Presented two papers at EOP 2025",
+      "Presented the Ising machine and modal decomposition work at EOP 2025",
     ],
     color: "#7a5ce0",
   },
   {
     role: "Co-Founder & Lead Developer",
-    org: "Qugain Quantum Technologies",
-    period: "Dec 2023 — present",
+    org: "Qugain Quantum Technologies · PIEDS-funded student startup, BITS Goa",
+    period: "Dec 2023 — June 2025",
     advisor: null,
     points: [
-      "Co-founded an open-source quantum algorithms startup; secured INR 5,00,000 seed funding (PIEDS) and the INR 40,000 Prof. Suresh Ramaswamy Award",
-      "Designed and released qtsit on PyPI — two Discrete-Time Quantum Walk implementations applied to the N-Armed Bandit problem, achieving measurable advantage over classical random walks",
-      "IBM Qiskit Fall Fest 2024 Mentor Badge recipient",
+      "Co-founded an open-source quantum algorithms startup; secured INR 5,00,000 seed funding from PIEDS and the INR 40,000 Prof. Suresh Ramaswamy Award",
+      "Led development of qtsit, released on PyPI: coined and split-step discrete-time quantum walk implementations applied to the N-Armed Bandit problem, outperforming classical random-walk baselines",
     ],
     color: "#20c0a8",
   },
   {
     role: "Research Intern",
     org: "CeNSE, Indian Institute of Science, Bengaluru",
-    period: "June – August 2024",
+    period: "June 2024 — Aug 2024",
     advisor: "Dr. Dhavala Suri",
     points: [
       "Designed a cryostat dipstick in Fusion 360 for low-temperature transport measurements",
-      "Built a PyQt5/QCoDeS GUI for automated I-V characterization",
+      "Built a PyQt5/QCoDeS GUI to automate I-V characterization",
     ],
     color: "#d4880a",
   },
   {
-    role: "BITS Pilani, Goa",
-    org: "Teaching, Outreach & Campus Life",
-    period: "Oct 2021 – June 2026",
+    role: "M.Sc. (Hons.) Physics · B.E. Mechanical Engineering",
+    org: "BITS Pilani, K K Birla Goa Campus · dual degree",
+    period: "Oct 2021 — June 2026",
     advisor: null,
     points: [
-      "Teaching Assistant, Quantum Information & Computation (BITS-F386) under Dr. Radhika Vathsan — designed and graded assignments for 50 students, created Qiskit-based tutorials",
-      "Mentor for Quark STP and CTE — taught Grover's Algorithm and Special Relativity to 150+ students using Manim-based materials",
-      "Quantum Computing Lead, Google Developer Student Club — organized IBM-sponsored Qiskit Fall Fest 2023; received 2024 Qiskit Fall Fest Mentor Badge",
-      "Core Member, Mime Club BITS Goa, made and performed two fun performances every year",
+      "Teaching Assistant, Quantum Information & Computation (BITS-F386) under Dr. Radhika Vathsan: designed and graded assignments for 50 students and created Qiskit-based Jupyter tutorials",
+      "Mentored 150+ students in Quantum Computing with Qiskit (Quark STP) and Theory of Relativity (CTE), with Manim-based materials on Grover's algorithm and special relativity",
+      "Quantum Computing Lead, Google Developer Student Club (Aug 2023 – May 2025): led workshops and study groups for 100+ students, organized the IBM-sponsored Qiskit Fall Fest 2023, and received the 2024 Qiskit Fall Fest Mentor Badge",
+      "Steering Member, QIndia · Core Member, Nirmaan NGO · Core Member, Mime Club (two productions a year)",
     ],
     color: "#c84040",
   },
@@ -237,3 +226,26 @@ export const FRAGMENTS = [
   { kind: "note", content: "Boltzmann weight: e^{-ΔE/kT} — simulated annealing mimics cooling", coord: "stat. mech." },
   { kind: "ref", content: "Aharonov et al. 1993 — coined quantum walk on the line", coord: "PRL 70, 1975" },
 ];
+
+export const SKILLS = [
+  { group: "Experimental", items: ["Optical cavity alignment & mode matching", "PDH locking & PID feedback", "SLM holography & beam shaping", "Fourier optics", "Second-harmonic generation", "Lab automation"] },
+  { group: "Programming & Frameworks", items: ["Python", "Qiskit", "QuTiP", "PennyLane", "Strawberry Fields", "JavaScript (React)", "LaTeX"] },
+  { group: "Tools & Platforms", items: ["Red Pitaya", "LabVIEW", "MATLAB", "Simulink", "COMSOL", "FINESSE 3", "Fusion 360", "IBM Quantum", "Git/GitHub", "Jupyter"] },
+];
+
+export const PRESENTATIONS = [
+  { authors: ["G. Patil*", "H. Hajeri*", "S. P. Amrithraj", "A. Prabhakar"], title: "Modal Decomposition of Cavity SHG Fields using Spatial Light Modulator", venue: "EOP 2025" },
+  { authors: ["H. Hajeri*", "N. Vinod P.M.", "G. Patil", "S. P. Amrithraj", "A. Prabhakar"], title: "Spatial Photonic Ising Machine using Spatial Light Modulators", venue: "EOP 2025" },
+];
+
+export const AWARDS = [
+  { name: "PIEDS Seed Fund Grant", detail: "INR 5,00,000" },
+  { name: "Prof. Suresh Ramaswamy Award", detail: "INR 40,000" },
+  { name: "IBM Qiskit Fall Fest Mentor Badge", detail: "2024" },
+];
+
+export const LINKS = {
+  email: "tau.harsha@gmail.com",
+  linkedin: "https://www.linkedin.com/in/harsha-tau/",
+  github: "https://github.com/harsha-helix",
+};

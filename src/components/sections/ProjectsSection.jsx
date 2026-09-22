@@ -48,7 +48,7 @@ export default function ProjectsSection() {
         }} />
 
         <div style={{ position: "absolute", top: isMobile ? 20 : 64, left: isMobile ? 24 : 48, zIndex: 10 }}>
-          <SectionLabel n="01" label="Pinned artifacts" />
+          <SectionLabel n="01" label="Research Projects" />
         </div>
         <div style={{
           position: "absolute", top: isMobile ? 22 : 68, right: isMobile ? 24 : 48, zIndex: 10,
@@ -118,19 +118,19 @@ export default function ProjectsSection() {
                   </span>
                 ))}
               </div>
-              <div style={{ display: isMobile ? "none" : "block" }}>
-                <div style={{
-                  fontSize: 11, fontFamily: MONO, color: T.textDim,
-                  display: "flex", alignItems: "center", gap: 6, paddingTop: 16,
-                  borderTop: `0.5px dashed ${T.border}`
-                }}>
-                  <span style={{ opacity: 0.5 }}>↳</span>{project.annotation}
-                </div>
-                <div style={{ display: "flex", gap: 12, marginTop: 24 }}>
-                  {(project.links || []).map(({ label: l, url: h }) => (
-                    <a key={l} href={h} style={{
+              <div style={{
+                fontSize: isMobile ? 10 : 11, fontFamily: MONO, color: T.textDim,
+                display: "flex", alignItems: "center", gap: 6, paddingTop: isMobile ? 8 : 16,
+                borderTop: `0.5px dashed ${T.border}`
+              }}>
+                <span style={{ opacity: 0.5 }}>↳</span>{project.annotation}
+              </div>
+              {(project.links || []).length > 0 && (
+                <div style={{ display: "flex", gap: 12, marginTop: isMobile ? 10 : 24 }}>
+                  {project.links.map(({ label: l, url: h }) => (
+                    <a key={l} href={h} target="_blank" rel="noopener noreferrer" style={{
                       fontFamily: MONO, fontSize: 10.5, color: T.textMid,
-                      border: `0.5px solid ${T.border}`, borderRadius: 4, padding: "7px 18px",
+                      border: `0.5px solid ${T.border}`, borderRadius: 4, padding: isMobile ? "5px 14px" : "7px 18px",
                       textDecoration: "none", letterSpacing: "0.06em", background: T.surface,
                       transition: "all 0.2s"
                     }}>
@@ -138,7 +138,8 @@ export default function ProjectsSection() {
                     </a>
                   ))}
                 </div>
-
+              )}
+              <div style={{ display: isMobile ? "none" : "block" }}>
                 <div style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 11 }}>
                   {PROJECTS.map((p, i) => (
                     <div key={p.id} style={{
@@ -183,20 +184,7 @@ export default function ProjectsSection() {
                 position: "absolute", bottom: 16, left: 18, fontFamily: MONO,
                 fontSize: 9, color: T.textDim, letterSpacing: "0.08em"
               }}>
-                concept field · {project.nodes.length} active
-              </div>
-              {/* active node count glow */}
-              <div style={{
-                position: "absolute", top: 16, right: 16,
-                display: "flex", alignItems: "center", gap: 6
-              }}>
-                <div style={{
-                  width: 5, height: 5, borderRadius: "50%", background: T.accent1,
-                  boxShadow: `0 0 8px ${T.accent1}`, animation: "pulse 2s ease-in-out infinite"
-                }} />
-                <span style={{ fontFamily: MONO, fontSize: 9, color: T.textDim }}>
-                  live
-                </span>
+                related concepts · hover or tap a node
               </div>
             </div>
           </div>
@@ -208,4 +196,4 @@ export default function ProjectsSection() {
       `}</style>
     </div>
   );
-}
+}
