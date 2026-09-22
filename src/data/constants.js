@@ -25,6 +25,15 @@ export const PROJECTS = [
     ],
   },
   {
+    id: 6,
+    title: "Cavity Alignment & PDH Locking",
+    description: "Aligned and locked two optical cavities: a triangular mode cleaner at 1064 nm and a bow-tie SHG cavity with a PPLN crystal converting 1064 → 532 nm, with 99% mode matching. Pound-Drever-Hall error signals feed a Red Pitaya lock-in/PID loop, which drives the cavity PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz bandwidth, up to 200 mA into the capacitive piezo) for stable lock acquisition.",
+    tags: ["Optical Cavities", "Feedback Control", "SHG"],
+    tools: ["Red Pitaya", "PDH", "PID", "HV Amplifier", "PPLN"],
+    annotation: "IIT Madras — Prof. Anil Prabhakar",
+    nodes: ["Cavity", "PDH Lock", "Mode Cleaner", "SHG", "Photonics"],
+  },
+  {
     id: 3,
     title: "Discrete-Time Quantum Walk",
     description: "Coined and split-step DTQW circuits implemented on Qiskit for RL-based optimization. Demonstrated measurable advantage over classical random walk baselines on the N-Armed Bandit problem.",
@@ -70,6 +79,8 @@ export const NODE_COLORS = {
   "SHG": { r: 225, g: 165, b: 45, label: "#e0c030" },
   "Modal Decomp.": { r: 215, g: 145, b: 55, label: "#d8a840" },
   "Fourier Optics": { r: 230, g: 170, b: 35, label: "#e8c828" },
+  "PDH Lock": { r: 205, g: 135, b: 60, label: "#d49848" },
+  "Mode Cleaner": { r: 195, g: 125, b: 45, label: "#c89038" },
   "Optimization": { r: 30, g: 185, b: 165, label: "#20c0a8" },
   "RL": { r: 40, g: 195, b: 175, label: "#28c8b0" },
   "Algorithms": { r: 25, g: 175, b: 155, label: "#18b8a0" },
@@ -95,6 +106,8 @@ export const NODE_DESCRIPTIONS = {
   "SHG": "Second-harmonic generation — a χ² nonlinear process where two photons at ω combine inside a phase-matched crystal to produce one photon at 2ω, converting infrared to visible light.",
   "Modal Decomp.": "Expressing an optical field as a weighted sum over a complete orthonormal basis (Hermite-Gaussian, LG modes). The expansion coefficients reveal how much power each spatial mode carries.",
   "Fourier Optics": "A converging lens performs a 2D spatial Fourier transform at its back focal plane. This lets us filter, correlate, and multiply signals optically at the speed of light.",
+  "PDH Lock": "Pound-Drever-Hall locking: phase-modulate the laser, demodulate the cavity reflection, and you get an error signal that is antisymmetric about resonance. A servo feeds it back to hold the cavity on resonance.",
+  "Mode Cleaner": "A short, high-finesse cavity (often triangular) that transmits only its fundamental TEM₀₀ mode. Higher-order spatial modes and some beam jitter are rejected, leaving a clean Gaussian beam downstream.",
   "Optimization": "Finding the global minimum (or maximum) of an objective function over a discrete or continuous search space, often under constraints — central to scheduling, finance, and ML.",
   "RL": "A framework where an agent learns a policy by interacting with an environment and maximising cumulative reward. The agent's value estimates improve via temporal-difference or policy-gradient updates.",
   "Algorithms": "Precisely specified computational procedures with well-defined inputs, outputs, and complexity bounds. Algorithmic analysis determines whether a problem is tractable or intractable.",
@@ -125,6 +138,8 @@ export const GRAPH_NODES = [
   { id: "Cluster States", x: 0.28, y: 0.18, mx: 0.80, my: 0.36 },
   { id: "Entanglement", x: 0.40, y: 0.44, mx: 0.50, my: 0.26 },
   { id: "Fourier Optics", x: 0.68, y: 0.60, mx: 0.50, my: 0.56 },
+  { id: "PDH Lock", x: 0.80, y: 0.93, mx: 0.72, my: 0.92 },
+  { id: "Mode Cleaner", x: 0.60, y: 0.90, mx: 0.20, my: 0.92 },
 ];
 
 export const GRAPH_EDGES = [
@@ -137,6 +152,8 @@ export const GRAPH_EDGES = [
   ["Photonics", "SLM"], ["Photonics", "Modal Decomp."], ["Photonics", "Cavity"], ["Photonics", "Interference"],
   ["Modal Decomp.", "Cavity"], ["Modal Decomp.", "Fourier Optics"],
   ["Cavity", "SHG"], ["SHG", "SLM"], ["SHG", "Fourier Optics"],
+  ["PDH Lock", "Cavity"], ["PDH Lock", "SHG"], ["PDH Lock", "Mode Cleaner"],
+  ["Mode Cleaner", "Cavity"], ["Mode Cleaner", "Photonics"],
   ["MEMS", "Acoustics"], ["MEMS", "FEM"], ["MEMS", "Mechanics"],
   ["FEM", "Mechanics"], ["FEM", "Acoustics"],
   ["QuTiP", "Entanglement"], ["QuTiP", "Cluster States"], ["QuTiP", "Quantum Walk"],
@@ -162,13 +179,14 @@ export const STATUS_COLORS_DARK = {
 
 export const EXPERIENCE = [
   {
-    role: "Research Student",
+    role: "Research Staff",
     org: "Indian Institute of Technology, Madras",
     period: "June 2025 — present",
     advisor: "Prof. Anil Prabhakar",
     points: [
       "Built a Spatial Photonic Ising Machine using a phase-only SLM and Fourier optics to solve NP-hard optimization problems via analog interference, with a Metropolis simulated annealing feedback loop and Gaussian beam compensation",
       "Developed an SLM-based holographic modal decomposition framework for a bow-tie SHG cavity; introduced a digital knife-edge alignment technique and crosstalk matrix calibration, improving average modal self-overlap from 0.86 → 0.96 (fundamental mode: 0.996)",
+      "Aligned and implemented Pound-Drever-Hall (PDH) locking for a bow-tie SHG cavity (PPLN, 1064 → 532 nm) and a triangular mode-cleaner cavity, using a Red Pitaya-based lock-in/PID controller driving a PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz, up to 200 mA)",
       "Presented two papers at EOP 2025",
     ],
     color: "#7a5ce0",
