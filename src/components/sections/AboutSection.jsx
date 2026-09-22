@@ -28,9 +28,10 @@ export default function AboutSection() {
         </p>
         <div style={{ maxWidth: 720 }}>
           <p style={para}>
-            I'm an experimental physicist working on quantum optics and photonic computing. Since June 2025 I have been
-            Research Staff in Prof. Anil Prabhakar's group at IIT Madras, where I align and lock optical cavities, characterize
-            their spatial modes with holographic modal decomposition, and use spatial light modulators as analog optical processors.
+            I'm an experimental physicist working on quantum optics and photonic computing. I did two semester-long M.Sc.
+            theses in Prof. Anil Prabhakar's group at IIT Madras and stayed on as Research Staff in June 2026. There I align and
+            lock optical cavities, characterize their spatial modes with holographic modal decomposition, and use spatial light
+            modulators as analog optical processors.
           </p>
           <p style={para}>
             I'm most interested in systems where the physics does the computation: interference that evaluates a cost function,

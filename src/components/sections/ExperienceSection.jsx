@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { ThemeContext, MONO, SERIF } from "../../context/ThemeContext";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
-import { EXPERIENCE } from "../../data/constants";
+import { EXPERIENCE, LINKS } from "../../data/constants";
 import SectionLabel from "../ui/SectionLabel";
 import SectionHeading from "../ui/SectionHeading";
 
@@ -95,28 +95,53 @@ export default function ExperienceSection() {
                       transition: "all 0.4s"
                     }} />
                     <span style={{ fontSize: isMobile ? 18 : 20, fontFamily: SERIF, fontWeight: 600, color: T.text, lineHeight: 1.1 }}>
-                      {exp.role}
+                      {exp.roles ? exp.org : exp.role}
                     </span>
                   </div>
 
-                  <div style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, marginBottom: 20, letterSpacing: "0.02em" }}>
-                    {exp.org}
-                  </div>
+                  {!exp.roles && (
+                    <div style={{ fontFamily: MONO, fontSize: 12, color: T.textDim, marginBottom: 20, letterSpacing: "0.02em" }}>
+                      {exp.org}
+                    </div>
+                  )}
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {exp.points.map((pt, j) => (
-                      <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                        <div style={{
-                          width: 4, height: 4, borderRadius: "50%", background: isHovered ? exp.color : T.textDim,
-                          marginTop: 8, flexShrink: 0, opacity: isHovered ? 0.8 : 0.4,
-                          transition: "all 0.4s"
-                        }} />
-                        <span style={{ fontSize: 14.5, color: T.textMid, lineHeight: 1.6, fontFamily: SERIF }}>
-                          {pt}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                  {exp.roles ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 18 }}>
+                      {exp.roles.map((r) => (
+                        <div key={r.role} style={{
+                          paddingLeft: 16, borderLeft: `1px solid ${isHovered ? exp.color + "50" : T.border}`,
+                          transition: "border-color 0.4s"
+                        }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+                            <span style={{ fontSize: 16, fontFamily: SERIF, fontWeight: 600, color: T.text }}>{r.role}</span>
+                            <span style={{ fontFamily: MONO, fontSize: 11, color: T.textDim }}>{r.period.replace("—", "–")}</span>
+                          </div>
+                          {r.title && (
+                            <div style={{ fontFamily: SERIF, fontSize: 14.5, fontStyle: "italic", color: T.textMid, margin: "4px 0 0", lineHeight: 1.5 }}>
+                              {r.title}
+                            </div>
+                          )}
+                          {r.note && (
+                            <div style={{ fontFamily: MONO, fontSize: 11, color: T.textDim, marginTop: 4 }}>{r.note}</div>
+                          )}
+                          <div style={{ marginTop: 10 }}>
+                            <Points points={r.points} color={exp.color} isHovered={isHovered} T={T} />
+                          </div>
+                          {r.onRequest && (
+                            <a href={`mailto:${LINKS.email}?subject=${encodeURIComponent(`Thesis request: ${r.title}`)}`} style={{
+                              display: "inline-block", marginTop: 12, fontFamily: MONO, fontSize: 10.5, color: T.textMid,
+                              border: `0.5px solid ${T.border}`, borderRadius: 4, padding: "5px 12px",
+                              textDecoration: "none", background: T.surface, letterSpacing: "0.04em"
+                            }}>
+                              Thesis available on request
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <Points points={exp.points} color={exp.color} isHovered={isHovered} T={T} />
+                  )}
 
                   {exp.advisor && (
                     <div style={{ marginTop: 24, display: "inline-block", background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)", padding: "6px 12px", borderRadius: 6 }}>
@@ -132,5 +157,24 @@ export default function ExperienceSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function Points({ points, color, isHovered, T }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {points.map((pt, j) => (
+        <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+          <div style={{
+            width: 4, height: 4, borderRadius: "50%", background: isHovered ? color : T.textDim,
+            marginTop: 8, flexShrink: 0, opacity: isHovered ? 0.8 : 0.4,
+            transition: "all 0.4s"
+          }} />
+          <span style={{ fontSize: 14.5, color: T.textMid, lineHeight: 1.6, fontFamily: SERIF }}>
+            {pt}
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }

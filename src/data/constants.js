@@ -1,16 +1,12 @@
 export const PROJECTS = [
   {
-    id: 1,
-    title: "Spatial Photonic Ising Machine",
-    description: "Solving NP-hard optimization problems via analog optical interference. A phase-only SLM encodes spin configurations; Fourier optics computes the cost function; a Metropolis feedback loop drives convergence.",
-    tags: ["Quantum Optics", "Optimization", "Photonics"],
-    tools: ["Python", "SLM", "Fourier Optics", "MATLAB"],
-    annotation: "IIT Madras · presented at EOP 2025",
-    nodes: ["Ising", "Optimization", "SLM", "Interference", "Fourier Optics"],
-    links: [
-      { label: "GitHub", url: "https://github.com/harsha-helix/compact-slim/tree/main" },
-      { label: "Poster", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
-    ],
+    id: 6,
+    title: "Cavity Alignment & PDH Locking",
+    description: "Aligned and locked two optical cavities: a triangular mode cleaner at 1064 nm with 99% mode matching, and a bow-tie SHG cavity with a PPLN crystal converting 1064 → 532 nm. Pound-Drever-Hall error signals feed a Red Pitaya lock-in/PID loop, which drives the cavity PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz bandwidth, up to 200 mA into the capacitive piezo) for stable lock acquisition.",
+    tags: ["Optical Cavities", "Feedback Control", "SHG"],
+    tools: ["Red Pitaya", "PDH", "PID", "HV Amplifier", "PPLN"],
+    annotation: "IIT Madras · Prof. Anil Prabhakar",
+    nodes: ["Cavity", "PDH Lock", "Mode Cleaner", "SHG", "Photonics"],
   },
   {
     id: 2,
@@ -25,13 +21,17 @@ export const PROJECTS = [
     ],
   },
   {
-    id: 6,
-    title: "Cavity Alignment & PDH Locking",
-    description: "Aligned and locked two optical cavities: a triangular mode cleaner at 1064 nm and a bow-tie SHG cavity with a PPLN crystal converting 1064 → 532 nm, with 99% mode matching. Pound-Drever-Hall error signals feed a Red Pitaya lock-in/PID loop, which drives the cavity PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz bandwidth, up to 200 mA into the capacitive piezo) for stable lock acquisition.",
-    tags: ["Optical Cavities", "Feedback Control", "SHG"],
-    tools: ["Red Pitaya", "PDH", "PID", "HV Amplifier", "PPLN"],
-    annotation: "IIT Madras · Prof. Anil Prabhakar",
-    nodes: ["Cavity", "PDH Lock", "Mode Cleaner", "SHG", "Photonics"],
+    id: 1,
+    title: "Spatial Photonic Ising Machine",
+    description: "Solving NP-hard optimization problems via analog optical interference. A phase-only SLM encodes spin configurations; Fourier optics computes the cost function; a Metropolis feedback loop drives convergence.",
+    tags: ["Quantum Optics", "Optimization", "Photonics"],
+    tools: ["Python", "SLM", "Fourier Optics", "MATLAB"],
+    annotation: "IIT Madras · presented at EOP 2025",
+    nodes: ["Ising", "Optimization", "SLM", "Interference", "Fourier Optics"],
+    links: [
+      { label: "GitHub", url: "https://github.com/harsha-helix/compact-slim/tree/main" },
+      { label: "Poster", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
+    ],
   },
   {
     id: 3,
@@ -48,20 +48,11 @@ export const PROJECTS = [
   {
     id: 4,
     title: "Entanglement in Cluster States",
-    description: "Simulated 2D continuous-variable cluster states and computed entanglement measures on photon-subtracted squeezed vacuum states.",
-    tags: ["CV Quantum Optics", "Entanglement", "Cluster States"],
+    description: "Theory counterpart to the squeezed-light experiments: simulated 2D continuous-variable cluster states built from squeezed modes, and computed entanglement measures on photon-subtracted squeezed vacuum states.",
+    tags: ["CV Quantum Optics", "Squeezed Light", "Entanglement"],
     tools: ["Strawberry Fields", "Python"],
-    annotation: "BITS Goa · Dr. Sanjib Dey",
+    annotation: "BITS Goa · Prof. Sanjib Dey",
     nodes: ["Cluster States", "Entanglement", "Photonics"],
-  },
-  {
-    id: 5,
-    title: "MEMS Microphone Simulation",
-    description: "Structural-acoustic coupled FEM simulation of a capacitive MEMS microphone in COMSOL. Proposed design modifications that improved simulated sensitivity through geometry optimization.",
-    tags: ["MEMS", "Acoustics", "FEM"],
-    tools: ["COMSOL Multiphysics"],
-    annotation: "BITS Goa · Dr. D. G. Patil",
-    nodes: ["MEMS", "Acoustics", "FEM", "Mechanics"],
   },
 ];
 
@@ -69,8 +60,6 @@ export const NODE_COLORS = {
   "Entanglement": { r: 108, g: 92, b: 231, label: "#8a80e8" },
   "Quantum Walk": { r: 130, g: 100, b: 240, label: "#9a88f0" },
   "DTQW": { r: 148, g: 120, b: 245, label: "#a898f0" },
-  "QuTiP": { r: 90, g: 75, b: 210, label: "#8070d8" },
-  "Cluster States": { r: 115, g: 88, b: 225, label: "#9a7ae0" },
   "Ising": { r: 160, g: 100, b: 240, label: "#b080f0" },
   "SLM": { r: 220, g: 140, b: 40, label: "#e0a830" },
   "Photonics": { r: 235, g: 155, b: 30, label: "#e8b828" },
@@ -84,10 +73,7 @@ export const NODE_COLORS = {
   "Optimization": { r: 30, g: 185, b: 165, label: "#20c0a8" },
   "RL": { r: 40, g: 195, b: 175, label: "#28c8b0" },
   "Algorithms": { r: 25, g: 175, b: 155, label: "#18b8a0" },
-  "MEMS": { r: 220, g: 80, b: 80, label: "#e06060" },
-  "Acoustics": { r: 210, g: 90, b: 90, label: "#d07070" },
-  "FEM": { r: 205, g: 100, b: 75, label: "#d08060" },
-  "Mechanics": { r: 215, g: 85, b: 65, label: "#d87050" },
+  "Cluster States": { r: 115, g: 88, b: 225, label: "#9a7ae0" },
 };
 
 export const DEFAULT_COLOR = { r: 140, g: 130, b: 115, label: "#9a9080" };
@@ -96,8 +82,6 @@ export const NODE_DESCRIPTIONS = {
   "Entanglement": "A non-classical correlation between quantum subsystems where the joint state cannot be written as a product of individual states — the basis of most quantum information protocols.",
   "Quantum Walk": "A quantum analog of classical random walks where superposition allows simultaneous exploration of multiple paths, enabling quadratic speedups in certain search and sampling tasks.",
   "DTQW": "A quantum walk variant that evolves in discrete time steps via a coin operator followed by a conditional shift — produces interference patterns that classical Markov chains cannot replicate.",
-  "QuTiP": "An open-source Python framework for simulating quantum dynamics including Lindblad master equations, which model how quantum systems lose coherence due to environmental noise.",
-  "Cluster States": "Highly entangled multi-qubit graph states used as the universal resource in measurement-based quantum computation — the computation proceeds by adaptive single-qubit measurements.",
   "Ising": "A spin-glass Hamiltonian where binary variables on a graph interact via pairwise couplings. Many NP-hard combinatorial problems — MaxCut, graph coloring — map directly onto finding its ground state.",
   "SLM": "A liquid-crystal spatial light modulator that applies programmable phase or amplitude masks to an optical wavefront, enabling arbitrary beam shaping with pixel-level control.",
   "Photonics": "Using photons rather than electrons as carriers of information. Photonic platforms offer room-temperature operation, low loss propagation, and natural compatibility with quantum optics.",
@@ -111,10 +95,7 @@ export const NODE_DESCRIPTIONS = {
   "Optimization": "Finding the global minimum (or maximum) of an objective function over a discrete or continuous search space, often under constraints — central to scheduling, finance, and ML.",
   "RL": "A framework where an agent learns a policy by interacting with an environment and maximising cumulative reward. The agent's value estimates improve via temporal-difference or policy-gradient updates.",
   "Algorithms": "Precisely specified computational procedures with well-defined inputs, outputs, and complexity bounds. Algorithmic analysis determines whether a problem is tractable or intractable.",
-  "MEMS": "Micro-electromechanical systems — devices that integrate micron-scale mechanical elements and electronics on a single chip, fabricated via photolithographic processes.",
-  "Acoustics": "The physics of pressure-wave propagation in elastic media. In transducer design, acoustic modelling predicts how a mechanical structure couples to incident sound fields.",
-  "FEM": "Finite element method — a numerical scheme that discretises a continuous domain into elements, converts PDEs into a sparse linear system, and solves for field distributions (stress, displacement, pressure).",
-  "Mechanics": "The branch of physics governing the deformation and motion of solid bodies under applied forces, described by constitutive relations and Newton's laws at the continuum scale.",
+  "Cluster States": "Highly entangled graph states that serve as the resource for measurement-based quantum computation. In continuous-variable optics they are built by interfering squeezed modes of light on beam splitters.",
 };
 
 
@@ -130,35 +111,23 @@ export const GRAPH_NODES = [
   { id: "Modal Decomp.", x: 0.84, y: 0.68, mx: 0.80, my: 0.56 },
   { id: "Cavity", x: 0.74, y: 0.82, mx: 0.20, my: 0.56 },
   { id: "SHG", x: 0.88, y: 0.28, mx: 0.50, my: 0.64 },
-  { id: "MEMS", x: 0.18, y: 0.78, mx: 0.20, my: 0.74 },
-  { id: "Acoustics", x: 0.08, y: 0.64, mx: 0.50, my: 0.74 },
-  { id: "FEM", x: 0.06, y: 0.44, mx: 0.80, my: 0.74 },
-  { id: "Mechanics", x: 0.13, y: 0.18, mx: 0.50, my: 0.84 },
-  { id: "QuTiP", x: 0.44, y: 0.12, mx: 0.20, my: 0.36 },
-  { id: "Cluster States", x: 0.28, y: 0.18, mx: 0.80, my: 0.36 },
   { id: "Entanglement", x: 0.40, y: 0.44, mx: 0.50, my: 0.26 },
   { id: "Fourier Optics", x: 0.68, y: 0.60, mx: 0.50, my: 0.56 },
   { id: "PDH Lock", x: 0.80, y: 0.93, mx: 0.72, my: 0.92 },
   { id: "Mode Cleaner", x: 0.60, y: 0.90, mx: 0.20, my: 0.92 },
+  { id: "Cluster States", x: 0.28, y: 0.18, mx: 0.80, my: 0.36 },
 ];
 
 export const GRAPH_EDGES = [
-  ["Optimization", "Ising"], ["Optimization", "DTQW"], ["Optimization", "RL"],
-  ["Optimization", "Entanglement"], ["Optimization", "FEM"],
-  ["Quantum Walk", "DTQW"], ["Quantum Walk", "RL"], ["Quantum Walk", "Entanglement"],
-  ["DTQW", "RL"], ["DTQW", "Entanglement"],
-  ["SLM", "Ising"], ["SLM", "Interference"], ["SLM", "Modal Decomp."], ["SLM", "Fourier Optics"],
-  ["Interference", "Ising"], ["Interference", "Fourier Optics"],
-  ["Photonics", "SLM"], ["Photonics", "Modal Decomp."], ["Photonics", "Cavity"], ["Photonics", "Interference"],
-  ["Modal Decomp.", "Cavity"], ["Modal Decomp.", "Fourier Optics"],
-  ["Cavity", "SHG"], ["SHG", "SLM"], ["SHG", "Fourier Optics"],
-  ["PDH Lock", "Cavity"], ["PDH Lock", "SHG"], ["PDH Lock", "Mode Cleaner"],
-  ["Mode Cleaner", "Cavity"], ["Mode Cleaner", "Photonics"],
-  ["MEMS", "Acoustics"], ["MEMS", "FEM"], ["MEMS", "Mechanics"],
-  ["FEM", "Mechanics"], ["FEM", "Acoustics"],
-  ["QuTiP", "Entanglement"], ["QuTiP", "Cluster States"], ["QuTiP", "Quantum Walk"],
-  ["Cluster States", "Entanglement"],
-  ["Entanglement", "Quantum Walk"],
+  ["Optimization", "Ising"], ["Optimization", "DTQW"], ["Optimization", "RL"], ["Optimization", "Entanglement"],
+  ["Quantum Walk", "DTQW"], ["Quantum Walk", "RL"], ["Quantum Walk", "Entanglement"], ["DTQW", "RL"],
+  ["DTQW", "Entanglement"], ["SLM", "Ising"], ["SLM", "Interference"], ["SLM", "Modal Decomp."],
+  ["SLM", "Fourier Optics"], ["Interference", "Ising"], ["Interference", "Fourier Optics"], ["Photonics", "SLM"],
+  ["Photonics", "Modal Decomp."], ["Photonics", "Cavity"], ["Photonics", "Interference"], ["Modal Decomp.", "Cavity"],
+  ["Modal Decomp.", "Fourier Optics"], ["Cavity", "SHG"], ["SHG", "SLM"], ["SHG", "Fourier Optics"],
+  ["PDH Lock", "Cavity"], ["PDH Lock", "SHG"], ["PDH Lock", "Mode Cleaner"], ["Mode Cleaner", "Cavity"],
+  ["Mode Cleaner", "Photonics"], ["Entanglement", "Quantum Walk"],
+  ["Cluster States", "Entanglement"], ["Cluster States", "Photonics"],
 ];
 
 export const EXPLORING = [
@@ -169,15 +138,42 @@ export const EXPLORING = [
 
 export const EXPERIENCE = [
   {
-    role: "Research Staff",
+    // Grouped entry: roles are listed newest first and rendered stacked under one org
     org: "Indian Institute of Technology, Madras",
     period: "June 2025 — present",
     advisor: "Prof. Anil Prabhakar",
-    points: [
-      "Built a Spatial Photonic Ising Machine using a phase-only SLM and Fourier optics to solve NP-hard optimization problems via analog interference, with a Metropolis simulated annealing feedback loop and Gaussian beam compensation",
-      "Developed an SLM-based holographic modal decomposition framework for a bow-tie SHG cavity; introduced a digital knife-edge alignment technique and crosstalk matrix calibration, improving average modal self-overlap from 0.86 → 0.96 (fundamental mode: 0.996)",
-      "Aligned and implemented Pound-Drever-Hall (PDH) locking for a bow-tie SHG cavity (PPLN, 1064 → 532 nm) and a triangular mode-cleaner cavity, using a Red Pitaya-based lock-in/PID controller driving a PZT through a custom inverting HV amplifier (0–40 V, ~700 Hz, up to 200 mA)",
-      "Presented the Ising machine and modal decomposition work at EOP 2025",
+    roles: [
+      {
+        role: "Research Staff",
+        period: "June 2026 — present",
+        points: [
+          "Building a cascaded-cavity optical parametric oscillator (OPO) setup to produce and characterize squeezed vacuum",
+          "Locking the bow-tie SHG cavity (PPLN, 1064 → 532 nm) that pumps the OPO, using Pound-Drever-Hall feedback through a Red Pitaya lock-in/PID controller",
+        ],
+      },
+      {
+        role: "M.Sc. Thesis II",
+        period: "Jan 2026 — June 2026",
+        title: "Towards PDH Locking and Characterization of a Mode Cleaner Cavity",
+        note: "Co-supervisor: Prof. Sanjib Dey, BITS Goa",
+        onRequest: true,
+        points: [
+          "Aligned and characterized a triangular mode-cleaner cavity at 1064 nm, reaching 99% mode matching",
+          "Built the PDH locking chain: Red Pitaya lock-in/PID controller and a custom inverting HV amplifier (0–40 V, ~700 Hz, up to 200 mA) for the capacitive cavity piezo",
+        ],
+      },
+      {
+        role: "M.Sc. Thesis I",
+        period: "June 2025 — Dec 2025",
+        title: "Modal Decomposition and Spatial Photonic Ising Machine using a Single Phase-Only SLM",
+        note: "Co-supervisor: Prof. Sanjib Dey, BITS Goa",
+        onRequest: true,
+        points: [
+          "Built a spatial photonic Ising machine on a phase-only SLM, with Metropolis simulated-annealing feedback and Gaussian beam compensation",
+          "Developed holographic modal decomposition of bow-tie SHG cavity fields; digital knife-edge alignment and crosstalk calibration raised average modal self-overlap from 0.86 → 0.96",
+          "Presented both results at EOP 2025",
+        ],
+      },
     ],
     color: "#7a5ce0",
   },
@@ -209,6 +205,7 @@ export const EXPERIENCE = [
     period: "Oct 2021 — June 2026",
     advisor: null,
     points: [
+      "Two semester-long M.Sc. theses carried out at IIT Madras under Prof. Anil Prabhakar, co-supervised by Prof. Sanjib Dey",
       "Teaching Assistant, Quantum Information & Computation (BITS-F386) under Dr. Radhika Vathsan: designed and graded assignments for 50 students and created Qiskit-based Jupyter tutorials",
       "Mentored 150+ students in Quantum Computing with Qiskit (Quark STP) and Theory of Relativity (CTE), with Manim-based materials on Grover's algorithm and special relativity",
       "Quantum Computing Lead, Google Developer Student Club (Aug 2023 – May 2025): led workshops and study groups for 100+ students, organized the IBM-sponsored Qiskit Fall Fest 2023, and received the 2024 Qiskit Fall Fest Mentor Badge",
