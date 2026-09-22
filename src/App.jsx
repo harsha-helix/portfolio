@@ -175,7 +175,7 @@ function Portfolio() {
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 {[
                   { label: "GitHub ↗", href: "https://github.com/harsha-helix" },
-                  { label: "LinkedIn   ↗", href: "https://www.linkedin.com/in/harshavardhan-hajeri-01b279254/" },
+                  { label: "LinkedIn   ↗", href: "https://www.linkedin.com/in/harsha-tau/" },
                   { label: "Contact", href: "mailto:tau.harsha@gmail.com" },
                 ].map((l) => (
                   <a key={l.label} href={l.href}
