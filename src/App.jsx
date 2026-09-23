@@ -172,12 +172,12 @@ function Portfolio() {
                 Harshavardhan Hajeri
               </h1>
               <p style={{ fontSize: 17, color: T.textMid, lineHeight: 1.7, margin: "0 0 14px", maxWidth: 560 }}>
-                Experimental quantum optics: I build and control optical hardware, from locked cavities and{" "}
+                I build and control optical hardware, from locked cavities and{" "}
                 <em style={{ fontStyle: "normal", color: T.accent3 }}>second-harmonic generation</em> to spatial light
                 modulators that <em style={{ fontStyle: "normal", color: T.accent1 }}>compute with interference</em>.
               </p>
               <p style={{ fontFamily: MONO, fontSize: 11, color: T.textDim, letterSpacing: "0.04em", lineHeight: 1.7, margin: "0 0 30px" }}>
-                Applying to PhD programs for Fall 2027 · open to research roles in quantum photonics
+                Experimental quantum optics researcher open to quantum photonics R&D roles and Fall 2027 PhD opportunities.
               </p>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                 {[
