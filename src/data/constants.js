@@ -58,7 +58,7 @@ export const PROJECTS = [
     ],
     links: [
       { label: "GitHub", url: "https://github.com/harsha-helix/compact-slim/tree/main" },
-      { label: "Poster", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
+      { label: "Poster & paper", url: "https://drive.google.com/drive/folders/1p-wgh2RzevIynVfUnVjojs5Hc6CZ552K?usp=sharing" }
     ],
   },
   {
