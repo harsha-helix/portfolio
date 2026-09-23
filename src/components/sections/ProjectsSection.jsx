@@ -6,6 +6,7 @@ import InteractiveBackgroundGraphs from "../backgrounds/InteractiveBackgroundGra
 import SectionLabel from "../ui/SectionLabel";
 import DotGrid from "../ui/DotGrid";
 import GraphCanvas from "../graph/GraphCanvas";
+import FigureGallery from "../gallery/FigureGallery";
 
 export default function ProjectsSection() {
   const { isDark, T } = useContext(ThemeContext);
@@ -28,6 +29,10 @@ export default function ProjectsSection() {
   }, [N]);
 
   const project = PROJECTS[activeIdx];
+  const figures = project.figures || [];
+  // Tab choice is remembered per project; projects with figures open on them by default
+  const [tabByProject, setTabByProject] = useState({});
+  const tab = figures.length ? (tabByProject[project.id] || "figures") : "concepts";
   const isMobile = useMediaQuery("(max-width: 850px)");
 
   return (
@@ -177,15 +182,36 @@ export default function ProjectsSection() {
             }}>
 
               <DotGrid opacity={0.14} />
-              <div style={{ position: "absolute", inset: 0 }}>
+              {/* The graph stays mounted so its node physics don't restart when switching tabs */}
+              <div style={{ position: "absolute", inset: 0, visibility: tab === "concepts" ? "visible" : "hidden" }}>
                 <GraphCanvas activeNodes={project.nodes} fullColor={false} dark={isDark} />
               </div>
-              <div style={{
-                position: "absolute", bottom: 16, left: 18, fontFamily: MONO,
-                fontSize: 9, color: T.textDim, letterSpacing: "0.08em"
-              }}>
-                related concepts · hover or tap a node
-              </div>
+              {tab === "concepts" && (
+                <div style={{
+                  position: "absolute", bottom: 16, left: 18, fontFamily: MONO,
+                  fontSize: 9, color: T.textDim, letterSpacing: "0.08em"
+                }}>
+                  related concepts · hover or tap a node
+                </div>
+              )}
+              {tab === "figures" && <FigureGallery key={project.id} figures={figures} />}
+              {figures.length > 0 && (
+                <div role="tablist" style={{ position: "absolute", top: 12, left: 14, zIndex: 3, display: "flex", gap: 4 }}>
+                  {[["figures", `Figures · ${figures.length}`], ["concepts", "Concepts"]].map(([k, label]) => (
+                    <button key={k} role="tab" aria-selected={tab === k}
+                      onClick={() => setTabByProject(t => ({ ...t, [project.id]: k }))}
+                      style={{
+                        fontFamily: MONO, fontSize: 10, letterSpacing: "0.06em", cursor: "pointer",
+                        padding: "5px 12px", borderRadius: 5,
+                        border: `0.5px solid ${tab === k ? T.borderMed : "transparent"}`,
+                        background: tab === k ? T.surface : "transparent",
+                        color: tab === k ? T.text : T.textDim, transition: "all 0.2s"
+                      }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
