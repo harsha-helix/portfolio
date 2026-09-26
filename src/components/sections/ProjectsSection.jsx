@@ -28,6 +28,14 @@ export default function ProjectsSection() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [N]);
 
+  // Active project is driven by scroll position, so clicking scrolls to that project's slot
+  const goTo = (i) => {
+    const el = outerRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY + i * window.innerHeight;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
   const project = PROJECTS[activeIdx];
   const figures = project.figures || [];
   // Tab choice is remembered per project; projects with figures open on them by default
@@ -59,13 +67,20 @@ export default function ProjectsSection() {
           position: "absolute", top: isMobile ? 22 : 68, right: isMobile ? 24 : 48, zIndex: 10,
           display: "flex", gap: 6, alignItems: "center"
         }}>
-          {PROJECTS.map((_, i) => (
-            <div key={i} style={{
-              height: 3, borderRadius: 2,
-              width: i === activeIdx ? 24 : 6,
-              background: i === activeIdx ? T.accent1 : "rgba(255,255,255,0.12)",
-              transition: "all 0.4s ease", boxShadow: i === activeIdx ? `0 0 8px ${T.accent1}60` : "none"
-            }} />
+          {PROJECTS.map((p, i) => (
+            <button key={i} type="button" onClick={() => goTo(i)}
+              aria-label={`Show project ${i + 1}: ${p.title}`} aria-current={i === activeIdx}
+              style={{
+                padding: "8px 0", margin: 0, border: "none", background: "none", cursor: "pointer",
+                display: "flex", alignItems: "center"
+              }}>
+              <span style={{
+                display: "block", height: 3, borderRadius: 2,
+                width: i === activeIdx ? 24 : 6,
+                background: i === activeIdx ? T.accent1 : "rgba(255,255,255,0.12)",
+                transition: "all 0.4s ease", boxShadow: i === activeIdx ? `0 0 8px ${T.accent1}60` : "none"
+              }} />
+            </button>
           ))}
           <span style={{ fontFamily: MONO, fontSize: 9, color: T.textDim, marginLeft: 8 }}>
             {activeIdx + 1}/{N}
@@ -147,8 +162,11 @@ export default function ProjectsSection() {
               <div style={{ display: isMobile ? "none" : "block" }}>
                 <div style={{ marginTop: 40, display: "flex", flexDirection: "column", gap: 11 }}>
                   {PROJECTS.map((p, i) => (
-                    <div key={p.id} style={{
+                    <button key={p.id} type="button" className="proj-jump" onClick={() => goTo(i)}
+                      aria-current={i === activeIdx} style={{
                       display: "flex", alignItems: "center", gap: 12,
+                      padding: 0, margin: 0, border: "none", background: "none", textAlign: "left",
+                      cursor: i === activeIdx ? "default" : "pointer",
                       opacity: i === activeIdx ? 1 : 0.22,
                       transform: i === activeIdx ? "translateX(8px)" : "translateX(0)",
                       transition: "all 0.5s cubic-bezier(0.22,1,0.36,1)"
@@ -162,7 +180,7 @@ export default function ProjectsSection() {
                       <span style={{ fontFamily: SERIF, fontSize: 13.5, color: T.text, lineHeight: 1.3 }}>
                         {p.title}
                       </span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -218,6 +236,7 @@ export default function ProjectsSection() {
       </div>
       <style>{`
         @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        .proj-jump:not([aria-current="true"]):hover{opacity:0.6 !important}
         @keyframes pulse{0%,100%{opacity:0.4;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
       `}</style>
     </div>
